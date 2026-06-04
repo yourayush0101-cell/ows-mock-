@@ -6,13 +6,13 @@
     <title>SSC MTS Elite Exam Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #4f46e5; --primary-hover: #4338ca; --success: #10b981; --danger: #ef4444; --dark: #0f172a; --light: #f8fafc; --border: #e2e8f0; }
+        :root { --primary: #4f46e5; --primary-hover: #4338ca; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --dark: #0f172a; --light: #f8fafc; --border: #e2e8f0; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; display: flex; justify-content: center; color: var(--dark); }
-        .platform-container { background: white; width: 100%; max-width: 950px; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .platform-container { background: white; width: 100%; max-width: 950px; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
         
-        /* Header Styling */
+        /* Header */
         .header-main { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .header-main h1 { color: var(--dark); margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.025em; }
+        .header-main h1 { color: var(--dark); margin: 0; font-size: 30px; font-weight: 800; }
         .header-main p { color: #64748b; margin: 8px 0 0 0; font-size: 15px; }
         
         /* Premium Tabs */
@@ -23,69 +23,63 @@
         .panel { display: none; }
         .panel.active { display: block; }
         
-        /* Setup Panel */
+        /* Layouts */
         .set-section { background: var(--light); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
-        .section-title { font-size: 16px; font-weight: 700; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; }
-        .set-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-        .set-btn { background: white; border: 1px solid var(--border); padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
-        .set-btn:hover, .set-btn.selected { border-color: var(--primary); color: var(--primary); background: #f5f3ff; }
+        .set-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .set-btn { background: white; border: 1px solid var(--border); padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; }
+        .set-btn.selected { border-color: var(--primary); color: var(--primary); background: #f5f3ff; }
         
-        .config-flex { display: flex; flex-wrap: wrap; gap: 20px; background: var(--light); border: 1px solid var(--border); padding: 15px 20px; border-radius: 12px; margin-bottom: 25px; align-items: center; }
-        .toggle-container { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
-        
-        /* Category Buttons */
         .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .mode-action-btn { background: white; border: 1px solid var(--border); padding: 16px; font-size: 15px; font-weight: 700; border-radius: 10px; cursor: pointer; text-align: left; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
-        .mode-action-btn:hover { border-color: var(--primary); color: var(--primary); background: #f5f3ff; transform: translateY(-1px); }
-        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; font-size: 16px; justify-content: center; }
-        .mix-action-btn:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); transform: translateY(-1px); color: white; }
+        .mode-action-btn { background: white; border: 1px solid var(--border); padding: 16px; font-size: 15px; font-weight: 700; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .mode-action-btn:hover { border-color: var(--primary); background: #f5f3ff; }
+        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; justify-content: center; }
 
         /* Quiz Layout */
         .quiz-box { border: 1px solid var(--border); padding: 30px; border-radius: 14px; background: white; }
         .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .timer-panel { background: #fee2e2; color: #991b1b; padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; }
-        .question-text { font-size: 20px; font-weight: 700; margin-bottom: 25px; line-height: 1.5; }
+        .timer-panel { background: #fee2e2; color: #991b1b; padding: 8px 14px; border-radius: 6px; font-weight: 700; }
+        .question-text { font-size: 20px; font-weight: 700; margin-bottom: 25px; }
         .options-stack { display: flex; flex-direction: column; gap: 12px; }
-        .opt-row { background: var(--light); border: 1px solid var(--border); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.15s; }
-        .opt-row:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .opt-row { background: var(--light); border: 1px solid var(--border); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; }
         .opt-row.selected { background: #eef2ff; border-color: var(--primary); color: var(--primary); font-weight: 700; }
         
-        .nav-controls { display: flex; gap: 15px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .control-btn { padding: 12px 24px; font-size: 15px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: none; }
-        .btn-submit-next { flex: 2; background: var(--primary); color: white; }
-        .btn-submit-next:hover { background: var(--primary-hover); }
-        .btn-submit-next:disabled { background: #cbd5e1; cursor: not-allowed; }
-        .btn-quit { flex: 1; background: #fff; border: 1px solid var(--danger); color: var(--danger); }
-        .btn-quit:hover { background: #fef2f2; }
+        /* Smart Nav Controls */
+        .nav-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .control-btn { padding: 12px 20px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; flex: 1; min-width: 120px; }
+        .btn-submit-next { background: var(--primary); color: white; }
+        .btn-skip { background: #cbd5e1; color: #475569; }
+        .btn-review { background: var(--warning); color: white; }
+        .btn-quit { background: #fff; border: 1px solid var(--danger); color: var(--danger); }
 
-        /* Professional Admin Workspace Layout */
-        .workspace-card { border: 1px solid var(--border); border-radius: 12px; background: white; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); }
-        .workspace-card h3 { margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: #1e293b; }
-        .workspace-card p { margin: 0 0 20px 0; font-size: 14px; color: #64748b; }
-        .input-grid-admin { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .input-field-wrapper { display: flex; flex-direction: column; gap: 6px; }
-        .input-field-wrapper label { font-size: 13px; font-weight: 600; color: #475569; }
-        .admin-input { padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; transition: all 0.2s; }
-        .admin-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        /* History Table & Mistake Tracker */
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        .history-table th, .history-table td { border: 1px solid var(--border); padding: 12px; text-align: left; }
+        .history-table th { background: var(--light); font-weight: 700; }
+        .view-report-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         
-        /* Results View */
-        .score-card-big { background: var(--light); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--border); max-width: 400px; margin: 0 auto 30px auto; }
-        .score-num { font-size: 54px; font-weight: 800; color: var(--primary); margin: 10px 0; }
-        .stat-badge-row { display: flex; justify-content: center; gap: 15px; font-weight: 700; font-size: 14px; margin-top: 10px; }
-        .graph-box { height: 350px; margin-top: 20px; position: relative; }
+        .review-item { background: var(--light); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0; border: 1px solid var(--border); border-left-width: 5px; }
+        .review-item.correct { border-left-color: var(--success); }
+        .review-item.wrong { border-left-color: var(--danger); }
+        .review-item.skipped { border-left-color: #cbd5e1; }
+        
+        /* Admin Workspace */
+        .workspace-card { border: 1px solid var(--border); border-radius: 12px; background: white; padding: 25px; margin-bottom: 25px; }
+        .admin-input { width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 5px; }
+        .graph-box { height: 320px; margin-bottom: 40px; }
     </style>
 </head>
 <body>
 
 <div class="platform-container">
     <div class="header-main">
-        <h1>SSC MTS Elite Vocab Platform</h1>
-        <p>Real Exam Pattern Continuous Practice Environment (+3 / -1 Marking System)</p>
+        <h1>SSC MTS Elite Exam Dashboard</h1>
+        <p>Real Exam Pattern & Professional Mistake Tracker Tracker System</p>
     </div>
 
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchPanel('test')">🎯 Practice Mock Board</button>
-        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Subject-Wise Analytics Graph</button>
+        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Advanced Analytics Graph</button>
+        <button class="tab-btn" onclick="switchPanel('history')">📜 Past Reports (Mistake Tracker)</button>
         <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Control Panel Workspace</button>
     </div>
 
@@ -93,17 +87,17 @@
     <div id="panel-test" class="panel active">
         <div id="menu-view">
             <div class="set-section">
-                <div class="section-title">📂 Available Lesson Sets</div>
+                <div style="font-weight: 700;">📂 Available Lesson Sets</div>
                 <div class="set-grid" id="set-buttons-container"></div>
             </div>
 
-            <div class="config-flex">
-                <label class="toggle-container">
-                    <input type="checkbox" id="timer-toggle" onchange="toggleTimerVisibility()" checked> Enable Full Mock Timer
+            <div style="display: flex; gap: 20px; background: var(--light); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 25px; align-items: center;">
+                <label style="font-weight: 600; cursor: pointer; font-size: 14px;">
+                    <input type="checkbox" id="timer-toggle" checked> Enable Full Mock Timer
                 </label>
-                <div id="timer-config-box" style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                <div style="font-size: 14px;">
                     <label style="font-weight: 600; color:#475569;">Duration (Minutes): </label>
-                    <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:60px; padding:6px;">
+                    <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:60px; padding:6px; display:inline-block; margin:0;">
                 </div>
             </div>
 
@@ -123,44 +117,39 @@
     <!-- PANEL 2: PERFORMANCE INTELLIGENCE -->
     <div id="panel-analytics" class="panel">
         <h2 style="font-size:18px; font-weight:700; margin-bottom:10px;">Subject-Wise Performance Breakdown</h2>
-        <p style="color:#64748b; font-size:13px; margin:0 0 20px 0;">Har subject ka alag custom curve track ho raha hai:</p>
-        <div class="graph-box">
-            <canvas id="analyticsChart"></canvas>
+        <div class="graph-box"><canvas id="analyticsChart"></canvas></div>
+    </div>
+
+    <!-- PANEL 3: HISTORY LOGS & MISTAKE REPORT -->
+    <div id="panel-history" class="panel">
+        <h2>📜 Past Mock Test Reports (Mistake Tracker)</h2>
+        <p style="color:#64748b; font-size:13px;">Yahan aap apne saare purane tests aur unme hui galtiyan poori details ke sath dekh sakte hain:</p>
+        <div id="history-list-view">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Set / Category</th>
+                        <th>Score Marks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+            </table>
+        </div>
+        <div id="history-detail-view" style="display:none; margin-top:20px;">
+            <button class="control-btn btn-skip" style="flex:none; width:150px; margin-bottom:20px;" onclick="closeReportDetail()">← Back to Reports</button>
+            <div id="report-detail-container"></div>
         </div>
     </div>
 
-    <!-- PANEL 3: PROFESSIONAL CONTROL WORKSPACE -->
+    <!-- PANEL 4: PROFESSIONAL CONTROL WORKSPACE -->
     <div id="panel-admin" class="panel">
-        <div class="workspace-card">
-            <h3>📝 Quick Word Registrar</h3>
-            <p>Manually insert single entries directly to the current set.</p>
-            <div class="input-grid-admin">
-                <div class="input-field-wrapper">
-                    <label>Category Type</label>
-                    <select id="quick-type" class="admin-input">
-                        <option value="OWS">One Word Substitution (OWS)</option>
-                        <option value="Synonym">Synonym</option>
-                        <option value="Antonym">Antonym</option>
-                        <option value="Idiom">Idiom & Phrase</option>
-                    </select>
-                </div>
-                <div class="input-field-wrapper">
-                    <label>Target Word / Idiom</label>
-                    <input type="text" id="quick-word" placeholder="E.g., Obsolete" class="admin-input">
-                </div>
-            </div>
-            <div class="input-field-wrapper" style="margin-bottom: 15px;">
-                <label>Definition / Question Prompt</label>
-                <input type="text" id="quick-meaning" placeholder="E.g., No longer in use because it is outdated" class="admin-input">
-            </div>
-            <button class="control-btn btn-submit-next" style="width:100%; border-radius:6px;" onclick="addQuickWord()">Commit Word Entry</button>
-        </div>
-
         <div class="workspace-card" style="background: #faf5ff; border-color: #e9d5ff;">
             <h3 style="color: #6b21a8;">📥 Batch Import Automation Data</h3>
             <p>Paste the dedicated structured code block generated by the AI to seamlessly spawn separate operational mock sets.</p>
             <textarea id="import-code-area" rows="5" class="admin-input" style="font-family: monospace; font-size:13px;" placeholder="Paste the code block here..."></textarea>
-            <button class="control-btn btn-submit-next" style="background:#8b5cf6; width:100%; border-radius:6px; margin-top:15px;" onclick="importBatchData()">Execute Batch Deployment</button>
+            <button class="control-btn btn-submit-next" style="background:#8b5cf6; width:100%; margin-top:15px;" onclick="importBatchData()">Execute Batch Deployment</button>
         </div>
     </div>
 </div>
@@ -172,7 +161,7 @@
             OWS: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Manuscript"], e: "Epitaph = Samadhi lekh."}],
             Synonym: [{q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Alert"], e: "Idle matlab aalsi."}],
             Antonym: [{q: "What is the antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Vain", "Rude"], e: "Arrogant ka ulta Humble hota hai."}],
-            Idiom: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Daily", "Never"], e: "Once in a blue moon = Bohot kam hone wala."}]
+            Idiom: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Daily", "Never"], e: "Once in a blue moon = Bohot kam ho jo."}]
         }
     ];
 
@@ -187,35 +176,25 @@
     let globalTimer = null;
     let totalSecondsLeft = 0;
     let currentQuizCategory = "";
-
-    let correctCount = 0;
-    let wrongCount = 0;
-    let unansweredCount = 0;
+    
+    // Tracking lists for user choices
+    let userSelectionsSnapshot = []; 
 
     function saveState() {
         localStorage.setItem('mts_pro_sets', JSON.stringify(sessionSets));
         localStorage.setItem('mts_pro_metrics', JSON.stringify(analyticsData));
         buildSetSelectors();
+        buildHistoryTable();
     }
 
     function buildSetSelectors() {
         const container = document.getElementById('set-buttons-container');
         container.innerHTML = sessionSets.map(s => `
-            <button class="set-btn ${currentActiveSetName === s.setName ? 'selected' : ''}" onclick="changeActiveSet('${s.setName}')">
-                ${s.setName}
-            </button>
+            <button class="set-btn ${currentActiveSetName === s.setName ? 'selected' : ''}" onclick="changeActiveSet('${s.setName}')">${s.setName}</button>
         `).join('');
     }
 
-    function changeActiveSet(name) {
-        currentActiveSetName = name;
-        buildSetSelectors();
-    }
-
-    function toggleTimerVisibility() {
-        const checked = document.getElementById('timer-toggle').checked;
-        document.getElementById('timer-config-box').style.visibility = checked ? 'visible' : 'hidden';
-    }
+    function changeActiveSet(name) { currentActiveSetName = name; buildSetSelectors(); }
 
     function switchPanel(name) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -223,36 +202,12 @@
         document.querySelector(`[onclick="switchPanel('${name}')"]`).classList.add('active');
         document.getElementById(`panel-${name}`).classList.add('active');
         if(name === 'analytics') renderAnalyticsChart();
-    }
-
-    function addQuickWord() {
-        const type = document.getElementById('quick-type').value;
-        const word = document.getElementById('quick-word').value.trim();
-        const meaning = document.getElementById('quick-meaning').value.trim();
-        
-        if(!word || !meaning) return alert("All fields are mandatory!");
-        
-        let targetSet = sessionSets.find(s => s.setName === currentActiveSetName);
-        let optionsPool = ["Options Alpha", "Options Beta", "Options Gamma"];
-        let generatedOptions = [word, ...optionsPool].sort(() => 0.5 - Math.random());
-
-        targetSet[type].push({
-            q: type === 'OWS' || type === 'Idiom' ? `${meaning}` : `Find the matching parameter for: '${word}'`,
-            a: word,
-            o: generatedOptions,
-            e: `Direct addition of raw word: ${word}`
-        });
-
-        saveState();
-        alert(`Successfully added entry to ${currentActiveSetName}!`);
-        document.getElementById('quick-word').value = "";
-        document.getElementById('quick-meaning').value = "";
+        if(name === 'history') buildHistoryTable();
     }
 
     function importBatchData() {
         const text = document.getElementById('import-code-area').value.trim();
         if(!text) return alert("Paste code block first!");
-
         try {
             const parsed = JSON.parse(text);
             if(parsed.questions && parsed.type) {
@@ -277,17 +232,13 @@
     function startQuiz(cat) {
         currentQuizCategory = cat;
         const targetSet = sessionSets.find(s => s.setName === currentActiveSetName);
-        if(cat === 'MIX') {
-            testSuiteQuestions = [...targetSet.OWS, ...targetSet.Synonym, ...targetSet.Antonym, ...targetSet.Idiom];
-        } else {
-            testSuiteQuestions = targetSet[cat] || [];
-        }
+        testSuiteQuestions = cat === 'MIX' ? [...targetSet.OWS, ...targetSet.Synonym, ...targetSet.Antonym, ...targetSet.Idiom] : targetSet[cat] || [];
 
         if(testSuiteQuestions.length === 0) return alert("No questions available in this current section pack.");
 
         testSuiteQuestions.sort(() => 0.5 - Math.random());
         activeQIdx = 0;
-        correctCount = 0; wrongCount = 0; unansweredCount = 0;
+        userSelectionsSnapshot = [];
 
         document.getElementById('menu-view').style.display = 'none';
         document.getElementById('quiz-view').style.display = 'block';
@@ -296,27 +247,22 @@
         if(useTimer) {
             let minutes = parseInt(document.getElementById('mock-minutes').value) || 5;
             totalSecondsLeft = minutes * 60;
-            executeClockCycle();
             globalTimer = setInterval(() => {
                 totalSecondsLeft--;
-                executeClockCycle();
+                const m = Math.floor(totalSecondsLeft / 60), s = totalSecondsLeft % 60;
+                const clock = document.getElementById('timer-clock-display');
+                if(clock) clock.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                
                 if(totalSecondsLeft <= 0) {
                     clearInterval(globalTimer);
-                    alert("Time's up!");
-                    unansweredCount += (testSuiteQuestions.length - activeQIdx);
+                    while(userSelectionsSnapshot.length < testSuiteQuestions.length) {
+                        userSelectionsSnapshot.push({ status: 'SKIPPED', selected: 'Not Attempted' });
+                    }
                     terminateMockSession();
                 }
             }, 1000);
         }
-
         renderQuizQuestion(useTimer);
-    }
-
-    function executeClockCycle() {
-        const m = Math.floor(totalSecondsLeft / 60);
-        const s = totalSecondsLeft % 60;
-        const element = document.getElementById('timer-clock-display');
-        if(element) element.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
     function renderQuizQuestion(timerFlag) {
@@ -327,21 +273,22 @@
         container.innerHTML = `
             <div class="quiz-box">
                 <div class="quiz-top-bar">
-                    <span style="font-weight:700; color:#475569;">Target Scope: ${currentActiveSetName} (${currentQuizCategory})</span>
-                    ${timerFlag ? `<div class="timer-panel">⏱️ Total Time Left: <span id="timer-clock-display"></span></div>` : '<span>Continuous Session</span>'}
-                    <span style="font-weight:600; color:#475569;">Item ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
+                    <span style="font-weight:700;">Scope: ${currentActiveSetName} (${currentQuizCategory})</span>
+                    ${timerFlag ? `<div class="timer-panel">⏱️ Time Left: <span id="timer-clock-display"></span></div>` : '<span>Continuous</span>'}
+                    <span style="font-weight:600;">Item ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
                 </div>
                 <div class="question-text">${currentData.q}</div>
                 <div class="options-stack">
                     ${currentData.o.map(opt => `<div class="opt-row" onclick="pickQuizOption(this, '${opt}')">${opt}</div>`).join('')}
                 </div>
                 <div class="nav-controls">
-                    <button class="control-btn btn-quit" onclick="forceQuitSession()">Exit Session</button>
-                    <button class="control-btn btn-submit-next" id="next-act-btn" disabled onclick="advanceTestTrack()">Submit & Forward</button>
+                    <button class="control-btn btn-quit" onclick="forceQuitSession()">Quit Test</button>
+                    <button class="control-btn btn-skip" onclick="handleQuestionAction('SKIP')">Skip Question</button>
+                    <button class="control-btn btn-review" onclick="handleQuestionAction('REVIEW')">Mark for Review</button>
+                    <button class="control-btn btn-submit-next" id="next-act-btn" disabled onclick="handleQuestionAction('SUBMIT')">Submit & Next</button>
                 </div>
             </div>
         `;
-        if(timerFlag) executeClockCycle();
     }
 
     function pickQuizOption(target, value) {
@@ -351,12 +298,21 @@
         document.getElementById('next-act-btn').disabled = false;
     }
 
-    function advanceTestTrack() {
-        const correctValue = testSuiteQuestions[activeQIdx].a;
-        if(selectedAnswerVal === correctValue) {
-            correctCount++;
-        } else {
-            wrongCount++;
+    function handleQuestionAction(type) {
+        const correct = testSuiteQuestions[activeQIdx].a;
+        if(type === 'SUBMIT') {
+            userSelectionsSnapshot.push({
+                status: selectedAnswerVal === correct ? 'CORRECT' : 'WRONG',
+                selected: selectedAnswerVal
+            });
+        } else if(type === 'SKIP') {
+            userSelectionsSnapshot.push({ status: 'SKIPPED', selected: 'Skipped' });
+        } else if(type === 'REVIEW') {
+            userSelectionsSnapshot.push({
+                status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED',
+                selected: selectedAnswerVal || 'Marked Review (No Answer)',
+                isReview: true
+            });
         }
 
         activeQIdx++;
@@ -369,40 +325,56 @@
     }
 
     function forceQuitSession() {
-        if(confirm("Exit mock dashboard? Current points status will be lost.")) {
+        if(confirm("Exit mock dashboard? Current progress will be lost.")) {
             clearInterval(globalTimer);
-            document.getElementById('quiz-view').style.display = 'none';
-            document.getElementById('menu-view').style.display = 'block';
+            closeQuizBoardView();
         }
     }
 
     function terminateMockSession() {
-        const totalAwardedPoints = (correctCount * 3) - (wrongCount * 1);
-        const logStamp = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'});
-        
-        analyticsData.push({ 
-            date: logStamp, 
-            set: currentActiveSetName, 
-            category: currentQuizCategory,
-            points: totalAwardedPoints 
+        let correct = 0, wrong = 0, skipped = 0;
+        userSelectionsSnapshot.forEach(s => {
+            if(s.status === 'CORRECT') correct++;
+            else if(s.status === 'WRONG') wrong++;
+            else skipped++;
         });
+
+        const totalAwardedPoints = (correct * 3) - (wrong * 1);
+        const logStamp = new Date().toLocaleString('en-IN', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+        
+        // Detailed log item for reports
+        const newLog = {
+            id: Date.now(),
+            date: logStamp,
+            set: currentActiveSetName,
+            category: currentQuizCategory,
+            points: totalAwardedPoints,
+            stats: { correct, wrong, skipped },
+            questionsDump: JSON.parse(JSON.stringify(testSuiteQuestions)),
+            answersDump: JSON.parse(JSON.stringify(userSelectionsSnapshot))
+        };
+
+        analyticsData.push({ date: logStamp.split(',')[0], set: currentActiveSetName, category: currentQuizCategory, points: totalAwardedPoints });
         localStorage.setItem('mts_pro_metrics', JSON.stringify(analyticsData));
 
-        const container = document.getElementById('quiz-view');
-        container.innerHTML = `
+        let historyLogsExtended = JSON.parse(localStorage.getItem('mts_pro_history_logs_ext')) || [];
+        historyLogsExtended.push(newLog);
+        localStorage.setItem('mts_pro_history_logs_ext', JSON.stringify(historyLogsExtended));
+
+        document.getElementById('quiz-view').innerHTML = `
             <div class="quiz-box" style="text-align:center;">
                 <h2>Exam Statistics Report</h2>
                 <div class="score-card-big">
                     <div>Final Awarded Marks</div>
                     <div class="score-num">${totalAwardedPoints}</div>
-                    <div style="font-size:13px; color:#64748b;">Marking criteria calculated via real SSC guidelines (+3 / -1)</div>
                 </div>
                 <div class="stat-badge-row">
-                    <span style="color:var(--success)">✅ Correct: ${correctCount}</span> | 
-                    <span style="color:var(--danger)">❌ Wrong: ${wrongCount}</span> | 
-                    <span style="color:#64748b;">⏳ Skipped/Left: ${unansweredCount}</span>
+                    <span style="color:var(--success)">✅ Correct: ${correct} (+3)</span> | 
+                    <span style="color:var(--danger)">❌ Wrong: ${wrong} (-1)</span> | 
+                    <span style="color:#64748b;">⏳ Skipped: ${skipped}</span>
                 </div>
-                <button class="control-btn btn-submit-next" style="margin-top:30px; max-width:250px;" onclick="closeQuizBoardView()">Return to Grid</button>
+                <p style="margin-top:15px; font-size:13px; color:#64748b;">Aapki poori Mistake Sheet 'Past Reports' tab me save ho gayi hai.</p>
+                <button class="control-btn btn-submit-next" style="margin-top:20px; max-width:250px;" onclick="closeQuizBoardView()">Return to Grid</button>
             </div>
         `;
     }
@@ -412,47 +384,95 @@
         document.getElementById('menu-view').style.display = 'block';
     }
 
+    function buildHistoryTable() {
+        const logs = JSON.parse(localStorage.getItem('mts_pro_history_logs_ext')) || [];
+        const tbody = document.getElementById('history-table-body');
+        if(logs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Koi test record nahi mila. Pehle koi mock test dein!</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = logs.reverse().map(l => `
+            <tr>
+                <td>${l.date}</td>
+                <td><strong>${l.set}</strong> <span class="timer-badge" style="background:#eef2ff; color:var(--primary); font-size:11px;">${l.category}</span></td>
+                <td style="font-weight:bold; color:${l.points >= 0 ? 'var(--success)' : 'var(--danger)'}">${l.points} Marks</td>
+                <td><button class="view-report-btn" onclick="openReportDetail(${l.id})">View Galti Tracker</button></td>
+            </tr>
+        `).join('');
+    }
+
+    function openReportDetail(id) {
+        const logs = JSON.parse(localStorage.getItem('mts_pro_history_logs_ext')) || [];
+        const match = logs.find(l => l.id === id);
+        if(!match) return;
+
+        document.getElementById('history-list-view').style.display = 'none';
+        const detailContainer = document.getElementById('report-detail-container');
+        document.getElementById('history-detail-view').style.display = 'block';
+
+        let html = `<h3>Galti Tracker Report: ${match.set} (${match.category})</h3>`;
+        html += `<div class="stat-badge-row" style="justify-content:flex-start; margin-bottom:20px;">
+            <span>Score: <strong>${match.points} Marks</strong></span> | 
+            <span style="color:var(--success)">Correct: ${match.stats.correct}</span> | 
+            <span style="color:var(--danger)">Wrong: ${match.stats.wrong}</span> | 
+            <span>Skipped: ${match.stats.skipped}</span>
+        </div>`;
+
+        match.questionsDump.forEach((q, idx) => {
+            const userAns = match.answersDump[idx];
+            let itemClass = "skipped";
+            if(userAns.status === 'CORRECT') itemClass = "correct";
+            if(userAns.status === 'WRONG') itemClass = "wrong";
+
+            html += `
+                <div class="review-item ${itemClass}">
+                    <strong>Q${idx + 1}: ${q.q}</strong><br>
+                    <div style="margin-top:8px; font-size:13px;">
+                        Aapka Answer: <span style="font-weight:700;">${userAns.selected}</span> 
+                        ${userAns.isReview ? ' <span style="color:var(--warning)">(Marked For Review)</span>' : ''}<br>
+                        Correct Answer: <span style="color:var(--success); font-weight:700;">${q.a}</span>
+                    </div>
+                    <div style="font-style:italic; font-size:12px; color:#64748b; margin-top:8px;">💡 <strong>Explanation:</strong> ${q.e || 'Direct parameter vocabulary checking.'}</div>
+                </div>
+            `;
+        });
+
+        detailContainer.innerHTML = html;
+    }
+
+    function closeReportDetail() {
+        document.getElementById('history-detail-view').style.display = 'none';
+        document.getElementById('history-list-view').style.display = 'block';
+    }
+
     function renderAnalyticsChart() {
         const ctx = document.getElementById('analyticsChart').getContext('2d');
         if(chartInstance) chartInstance.destroy();
 
-        // Unique timelines labels
         let uniqueTimeline = [...new Set(analyticsData.map(d => `${d.date} [${d.set.split(' ')[0] || ''}]`))];
-        
-        if(uniqueTimeline.length === 0) {
-            uniqueTimeline = ["Test 1", "Test 2", "Test 3"];
-        }
+        if(uniqueTimeline.length === 0) uniqueTimeline = ["T1", "T2"];
 
-        // Aligning points array subject-wise
-        const filterPoints = (cat) => {
-            return uniqueTimeline.map(t => {
-                const match = analyticsData.find(d => `${d.date} [${d.set.split(' ')[0] || ''}]` === t && d.category === cat);
-                return match ? match.points : null; // null keeps line broken if no test taken that day
-            });
-        };
+        const filterPoints = (cat) => uniqueTimeline.map(t => {
+            const match = analyticsData.find(d => `${d.date} [${d.set.split(' ')[0] || ''}]` === t && d.category === cat);
+            return match ? match.points : null;
+        });
 
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: uniqueTimeline,
                 datasets: [
-                    { label: 'One Word (OWS)', data: filterPoints('OWS'), borderColor: '#3b82f6', backgroundColor: '#3b82f6', tension: 0.2, spanGaps: true },
-                    { label: 'Synonyms', data: filterPoints('Synonym'), borderColor: '#10b981', backgroundColor: '#10b981', tension: 0.2, spanGaps: true },
-                    { label: 'Antonyms', data: filterPoints('Antonym'), borderColor: '#ef4444', backgroundColor: '#ef4444', tension: 0.2, spanGaps: true },
-                    { label: 'Idioms & Phrases', data: filterPoints('Idiom'), borderColor: '#f59e0b', backgroundColor: '#f59e0b', tension: 0.2, spanGaps: true },
-                    { label: 'MIX Full Mock', data: filterPoints('MIX'), borderColor: '#8b5cf6', backgroundColor: '#8b5cf6', tension: 0.2, spanGaps: true }
+                    { label: 'One Word (OWS)', data: filterPoints('OWS'), borderColor: '#3b82f6', tension: 0.2, spanGaps: true },
+                    { label: 'Synonyms', data: filterPoints('Synonym'), borderColor: '#10b981', tension: 0.2, spanGaps: true },
+                    { label: 'Antonyms', data: filterPoints('Antonym'), borderColor: '#ef4444', tension: 0.2, spanGaps: true },
+                    { label: 'Idioms', data: filterPoints('f59e0b'), borderColor: '#f59e0b', tension: 0.2, spanGaps: true },
+                    { label: 'MIX Full Mock', data: filterPoints('MIX'), borderColor: '#8b5cf6', tension: 0.2, spanGaps: true }
                 ]
             },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'top' } },
-                scales: { y: { title: { display: true, text: 'Awarded Marks' } } }
-            }
+            options: { responsive: true, maintainAspectRatio: false }
         });
     }
 
-    // Init
     buildSetSelectors();
 </script>
 </body>
