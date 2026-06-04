@@ -3,222 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart OWS Daily Mock Hub</title>
+    <title>SSC MTS Ultimate Vocab Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .dashboard { background: white; width: 100%; max-width: 800px; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        h1 { text-align: center; color: #007bff; margin-bottom: 25px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #dee2e6; padding-bottom: 10px; }
-        .tab-btn { background: none; border: none; font-size: 16px; font-weight: bold; cursor: pointer; padding: 8px 16px; color: #6c757d; }
-        .tab-btn.active { color: #007bff; border-bottom: 3px solid #007bff; }
+        :root { --primary: #007bff; --success: #28a745; --dark: #212529; --light: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f7; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .platform-container { background: white; width: 100%; max-width: 900px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; font-size: 28px; }
+        .subtitle { text-align: center; color: #6c757d; margin-bottom: 30px; font-size: 14px; }
+        .nav-tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #dee2e6; margin-bottom: 25px; padding-bottom: 5px; }
+        .tab-btn { background: none; border: none; font-size: 16px; font-weight: 600; cursor: pointer; padding: 10px 20px; color: #6c757d; transition: 0.2s; }
+        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
         .panel { display: none; }
         .panel.active { display: block; }
-        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; }
-        input, textarea { padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; }
-        button.main-btn { background: #007bff; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; transition: 0.2s; }
-        button.main-btn:hover { background: #0056b3; }
-        .word-count { font-size: 14px; color: #28a745; font-weight: bold; margin-bottom: 15px; }
-        .question { font-size: 18px; font-weight: bold; margin: 20px 0; }
-        .options { display: flex; flex-direction: column; gap: 10px; }
-        .opt-btn { background: #f8f9fa; border: 1px solid #ced4da; padding: 12px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 15px; }
-        .opt-btn.selected { background: #e7f1ff; border-color: #007bff; font-weight: bold; }
-        .graph-container { position: relative; height: 300px; width: 100%; }
-        .score-display { font-size: 40px; font-weight: bold; color: #28a745; text-align: center; margin: 20px 0; }
+        
+        /* Dashboard Cards */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .menu-card { background: var(--light); border: 2px solid #dee2e6; padding: 20px; text-align: center; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .menu-card:hover { transform: translateY(-3px); border-color: var(--primary); background: #f0f7ff; }
+        .menu-card h3 { margin: 0 0 10px 0; color: var(--dark); }
+        .menu-card p { margin: 0; font-size: 12px; color: #6c757d; }
+        .mix-card { grid-column: 1 / -1; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; }
+        .mix-card h3, .mix-card p { color: white; }
+        .mix-card:hover { background: linear-gradient(135deg, #0056b3, #004085); }
+
+        /* Quiz Styles */
+        .quiz-box { background: #fff; border: 1px solid #dee2e6; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        .q-header { display: flex; justify-content: space-between; margin-bottom: 15px; color: #6c757d; font-size: 14px; }
+        .question { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: var(--dark); }
+        .options-list { display: flex; flex-direction: column; gap: 12px; }
+        .opt-button { background: var(--light); border: 1px solid #ced4da; padding: 14px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s; }
+        .opt-button:hover { background: #e9ecef; }
+        .opt-button.selected { background: #e7f1ff; border-color: var(--primary); color: #0056b3; font-weight: bold; }
+        .submit-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; margin-top: 20px; cursor: pointer; }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Graph & Data Styles */
+        .graph-box { height: 320px; margin-top: 20px; }
+        .admin-box { background: #fff3cd; border: 1px solid #ffeeba; padding: 20px; border-radius: 10px; margin-top: 25px; }
+        .admin-box textarea { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; font-family: monospace; font-size: 12px; margin-top: 10px; }
+        .score-big { font-size: 50px; font-weight: bold; color: var(--success); text-align: center; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-<div class="dashboard">
-    <h1>Smart OWS Daily Mock Hub</h1>
-    
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('manage')">1. Add Words & Test</button>
-        <button class="tab-btn" onclick="switchTab('analytics')">2. Score Tracker Graph</button>
+<div class="platform-container">
+    <h1>SSC MTS Ultimate Vocab Platform</h1>
+    <div class="subtitle">Daily Targeted Practice & Continuous Improvement Tracker</div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchPanel('test')">🎯 Take Test / Choose Mode</button>
+        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Progress Tracker Graph</button>
+        <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Add Daily Words (Admin)</button>
     </div>
 
-    <!-- TAB 1: MANAGE & QUIZ -->
-    <div id="manage-panel" class="panel active">
-        <div class="input-group">
-            <h3>Add New OWS Word</h3>
-            <input type="text" id="word-input" placeholder="E.g., Epitaph">
-            <textarea id="meaning-input" placeholder="E.g., Words inscribed on a tomb or gravestone" rows="2"></textarea>
-            <button class="main-btn" style="background:#28a745;" onclick="saveWord()">Add to My Book</button>
+    <!-- PANEL 1: TEST MODES -->
+    <div id="panel-test" class="panel active">
+        <div id="menu-view">
+            <h2 style="margin-bottom:15px; font-size:18px;">Select Mock Test Category:</h2>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="initQuiz('OWS')">
+                    <h3>One Word (OWS)</h3>
+                    <p id="count-OWS">0 Words Loaded</p>
+                </div>
+                <div class="menu-card" onclick="initQuiz('Synonym')">
+                    <h3>Synonyms</h3>
+                    <p id="count-Synonym">0 Words Loaded</p>
+                </div>
+                <div class="menu-card" onclick="initQuiz('Antonym')">
+                    <h3>Antonyms</h3>
+                    <p id="count-Antonym">0 Words Loaded</p>
+                </div>
+                <div class="menu-card" onclick="initQuiz('Idiom')">
+                    <h3>Idioms & Phrases</h3>
+                    <p id="count-Idiom">0 Words Loaded</p>
+                </div>
+                <div class="menu-card mix-card" onclick="initQuiz('MIX')">
+                    <h3>Full Vocab MIX Mock</h3>
+                    <p>Mix questions from all sections (MTS Real Pattern)</p>
+                </div>
+            </div>
         </div>
 
-        <div class="word-count" id="count-status">Total Words Saved: 0</div>
-        <button class="main-btn" id="start-btn" onclick="startQuiz()">Generate Mock Test (Min 4 words needed)</button>
-
-        <div id="quiz-area" style="display:none; margin-top:25px; border-top:2px dashed #ccc; padding-top:20px;">
-            <!-- Quiz area will populate dynamically -->
+        <div id="quiz-view" style="display:none;">
+            <!-- Dynamic quiz elements go here -->
         </div>
     </div>
 
-    <!-- TAB 2: GRAPH / TRACKER -->
-    <div id="analytics-panel" class="panel">
-        <h3>Your Performance Graph</h3>
-        <p style="color:#6c757d; font-size:14px;">Ye graph dikhata hai ki aapka daily score improve ho raha hai ya nahi:</p>
-        <div class="graph-container">
-            <canvas id="scoreChart"></canvas>
+    <!-- PANEL 2: ANALYTICS -->
+    <div id="panel-analytics" class="panel">
+        <h2>Your Improvement Over Time</h2>
+        <p style="color:#6c757d; font-size:14px;">Ye graph aapke har test ka score jod kar banata hai taaki aap dekh sakein aap kitne regular hain:</p>
+        <div class="graph-box">
+            <canvas id="analyticsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- PANEL 3: CODE UPDATE (ADMIN) -->
+    <div id="panel-admin" class="panel">
+        <div class="admin-box">
+            <h3 style="margin:0; color:#856404;">📥 Import Daily Question Code</h3>
+            <p style="font-size:13px; color:#856404; margin: 5px 0 15px 0;">Jo code main (AI) chat me bana kar dunga use poora copy karke is niche wale box me paste kar do:</p>
+            <textarea id="import-code-area" rows="6" placeholder="Paste the generated code here..."></textarea>
+            <button class="submit-btn" style="background:#28a745;" onclick="importData()">Update Platform Data</button>
         </div>
     </div>
 </div>
 
 <script>
-    // LocalStorage se data load karna ya default set karna
-    let wordBank = JSON.parse(localStorage.getItem('ows_wordBank')) || [];
-    let scoreHistory = JSON.parse(localStorage.getItem('ows_scoreHistory')) || [];
-    let chartInstance = null;
+    // Starter base data (Default Questions)
+    const defaultData = {
+        OWS: [
+            {q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Autobiography"], e: "Epitaph matlab samadhi-lekh."},
+            {q: "A person who loves books", a: "Bibliophile", o: ["Bibliophile", "Bookworm", "Linguist", "Teetotaller"], e: "Bibliophile = Pustak premi."}
+        ],
+        Synonym: [
+            {q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Industrious"], e: "Idle ka matlab hota hai aalsi ya betha hua."}
+        ],
+        Antonym: [
+            {q: "What is the antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Cruel", "Egoistic"], e: "Arrogant (Ghamandi) ka ulta Humble (Vinamra) hota hai."}
+        ],
+        Idiom: [
+            {q: "Meaning of the idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Everyday", "At midnight"], e: "Once in a blue moon matlab jo bohot kam ho."}
+        ]
+    };
 
-    let currentIdx = 0;
-    let score = 0;
-    let selectedOpt = null;
-    let activeQuizData = [];
+    let masterData = JSON.parse(localStorage.getItem('mts_masterData')) || defaultData;
+    let historyLogs = JSON.parse(localStorage.getItem('mts_historyLogs')) || [];
+    let chartObj = null;
 
-    function updateStatus() {
-        document.getElementById('count-status').innerText = `Total Words Saved in Your Book: ${wordBank.length}`;
-        if(wordBank.length >= 4) {
-            document.getElementById('start-btn').disabled = false;
-            document.getElementById('start-btn').innerText = "🎯 Start Dynamic Mock Test";
-        } else {
-            document.getElementById('start-btn').disabled = true;
-            document.getElementById('start-btn').innerText = `Add ${4 - wordBank.length} more words to unlock Mock Test`;
-        }
+    let activeQuiz = [];
+    let curQ = 0;
+    let quizScore = 0;
+    let chosenAnswer = null;
+    let activeMode = "";
+
+    function saveToStorage() {
+        localStorage.setItem('mts_masterData', JSON.stringify(masterData));
+        localStorage.setItem('mts_historyLogs', JSON.stringify(historyLogs));
+        updateCounts();
     }
 
-    function saveWord() {
-        const w = document.getElementById('word-input').value.trim();
-        const m = document.getElementById('meaning-input').value.trim();
-        if(!w || !m) return alert("Please fill both word and meaning!");
-
-        wordBank.push({ word: w, meaning: m });
-        localStorage.setItem('ows_wordBank', JSON.stringify(wordBank));
-        
-        document.getElementById('word-input').value = '';
-        document.getElementById('meaning-input').value = '';
-        updateStatus();
-        alert(`"${w}" aapki list me add ho gaya hai!`);
+    function updateCounts() {
+        document.getElementById('count-OWS').innerText = `${masterData.OWS.length} Words Loaded`;
+        document.getElementById('count-Synonym').innerText = `${masterData.Synonym.length} Words Loaded`;
+        document.getElementById('count-Antonym').innerText = `${masterData.Antonym.length} Words Loaded`;
+        document.getElementById('count-Idiom').innerText = `${masterData.Idiom.length} Words Loaded`;
     }
 
-    function switchTab(tab) {
+    function switchPanel(panelName) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         
-        if(tab === 'manage') {
-            document.querySelector('[onclick="switchTab(\'manage\')"]').classList.add('active');
-            document.getElementById('manage-panel').classList.add('active');
+        document.querySelector(`[onclick="switchPanel('${panelName}')"]`).classList.add('active');
+        document.getElementById(`panel-${panelName}`).classList.add('active');
+
+        if(panelName === 'analytics') loadChart();
+    }
+
+    function importData() {
+        const rawCode = document.getElementById('import-code-area').value.trim();
+        if(!rawCode) return alert("Pehle code paste karein!");
+
+        try {
+            const parsed = JSON.parse(rawCode);
+            if(parsed.type && parsed.questions) {
+                masterData[parsed.type] = [...masterData[parsed.type], ...parsed.questions];
+                saveToStorage();
+                alert(`Badhiya! ${parsed.questions.length} naye questions successfuly load ho gaye hain!`);
+                document.getElementById('import-code-area').value = "";
+                switchPanel('test');
+            } else {
+                alert("Code ka format sahi nahi hai. Kripya sahi AI code use karein.");
+            }
+        } catch(e) {
+            alert("Kuch galti hui! Copy karne me poora code select karein.");
+        }
+    }
+
+    function initQuiz(mode) {
+        activeMode = mode;
+        curQ = 0;
+        quizScore = 0;
+        
+        if(mode === 'MIX') {
+            activeQuiz = [...masterData.OWS, ...masterData.Synonym, ...masterData.Antonym, ...masterData.Idiom];
         } else {
-            document.querySelector('[onclick="switchTab(\'analytics\')"]').classList.add('active');
-            document.getElementById('analytics-panel').classList.add('active');
-            renderChart();
+            activeQuiz = masterData[mode];
         }
+
+        if(activeQuiz.length === 0) return alert("Is section me abhi tak koi sawaal nahi hai! Pehle admin me code add karo.");
+        
+        activeQuiz.sort(() => 0.5 - Math.random()); // Randomize check
+        activeQuiz = activeQuiz.slice(0, 10); // Max 10 questions per test
+
+        document.getElementById('menu-view').style.display = 'none';
+        document.getElementById('quiz-view').style.display = 'block';
+        showQuestion();
     }
 
-    function startQuiz() {
-        if(wordBank.length < 4) return;
-        document.getElementById('quiz-area').style.display = 'block';
-        currentIdx = 0;
-        score = 0;
+    function showQuestion() {
+        chosenAnswer = null;
+        const qData = activeQuiz[curQ];
+        const qView = document.getElementById('quiz-view');
         
-        // Shuffle and prepare data
-        activeQuizData = [...wordBank].sort(() => 0.5 - Math.random()).slice(0, 10); // Max 10 questions
-        loadQuizQuestion();
-    }
-
-    function loadQuizQuestion() {
-        selectedOpt = null;
-        const currentItem = activeQuizData[currentIdx];
-        
-        // Generate options (1 right, 3 wrong from bank)
-        let options = [currentItem.word];
-        let wrongPool = wordBank.filter(w => w.word !== currentItem.word).map(w => w.word);
-        wrongPool.sort(() => 0.5 - Math.random());
-        for(let i=0; i<3 && i<wrongPool.length; i++) {
-            options.push(wrongPool[i]);
-        }
-        options.sort(() => 0.5 - Math.random());
-
-        const quizArea = document.getElementById('quiz-area');
-        quizArea.innerHTML = `
-            <div class="question">Q${currentIdx+1}: ${currentItem.meaning}</div>
-            <div class="options">
-                ${options.map(o => `<button class="opt-btn" onclick="selectOpt(this, '${o}')">${o}</button>`).join('')}
+        qView.innerHTML = `
+            <div class="quiz-box">
+                <div class="q-header">
+                    <span>Mode: <strong>${activeMode} Mock</strong></span>
+                    <span>Question ${curQ + 1} of ${activeQuiz.length}</span>
+                </div>
+                <div class="question">${qData.q}</div>
+                <div class="options-list">
+                    ${qData.o.map(opt => `<button class="opt-button" onclick="selectAnswer(this, '${opt}')">${opt}</button>`).join('')}
+                </div>
+                <button class="submit-btn" id="sub-q-btn" disabled onclick="submitQuestion()">Submit & Next</button>
             </div>
-            <button class="main-btn" style="margin-top:15px;" id="next-q-btn" disabled onclick="nextQuizQuestion()">Submit Answer</button>
         `;
     }
 
-    function selectOpt(btn, val) {
-        document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    function selectAnswer(btn, val) {
+        document.querySelectorAll('.opt-button').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
-        selectedOpt = val;
-        document.getElementById('next-q-btn').disabled = false;
+        chosenAnswer = val;
+        document.getElementById('sub-q-btn').disabled = false;
     }
 
-    function nextQuizQuestion() {
-        if(selectedOpt === activeQuizData[currentIdx].word) {
-            score++;
-        }
-        currentIdx++;
-        if(currentIdx < activeQuizData.length) {
-            loadQuizQuestion();
+    function submitQuestion() {
+        if(chosenAnswer === activeQuiz[curQ].a) quizScore++;
+        curQ++;
+        if(curQ < activeQuiz.length) {
+            showQuestion();
         } else {
-            endQuiz();
+            finishQuiz();
         }
     }
 
-    function endQuiz() {
-        const percentage = Math.round((score / activeQuizData.length) * 100);
-        const today = new Date().toLocaleDateString('en-IN', {day: 'numeric', month: 'short'});
+    function finishQuiz() {
+        const finalPct = Math.round((quizScore / activeQuiz.length) * 100);
+        const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'});
         
-        // Score ko history me save karna
-        scoreHistory.push({ date: today, score: percentage });
-        localStorage.setItem('ows_scoreHistory', JSON.stringify(scoreHistory));
+        historyLogs.push({ date: dateStr, mode: activeMode, score: finalPct });
+        saveToStorage();
 
-        document.getElementById('quiz-area').innerHTML = `
-            <h3>Test Finished!</h3>
-            <div class="score-display">${score} / ${activeQuizData.length}</div>
-            <p style="text-align:center;">Aapne ${percentage}% score kiya hai. Ye data aapke tracker graph me add ho gaya hai!</p>
-            <button class="main-btn" onclick="document.getElementById('quiz-area').style.display='none'">Close Test</button>
+        const qView = document.getElementById('quiz-view');
+        qView.innerHTML = `
+            <div class="quiz-box" style="text-align:center;">
+                <h2>Mock Test Results</h2>
+                <div class="score-big">${quizScore} / ${activeQuiz.length}</div>
+                <p>Aapka final accuracy rate **${finalPct}%** raha.</p>
+                <button class="submit-btn" style="background:#6c757d;" onclick="exitQuiz()">Back to Dashboard</button>
+            </div>
         `;
     }
 
-    function renderChart() {
-        const ctx = document.getElementById('scoreChart').getContext('2d');
-        if(chartInstance) chartInstance.destroy();
+    function exitQuiz() {
+        document.getElementById('quiz-view').style.display = 'none';
+        document.getElementById('menu-view').style.display = 'block';
+    }
 
-        // Agar data khali ho to dummy data dikhayein graph me design ke liye
-        let labels = scoreHistory.map(h => h.date);
-        let data = scoreHistory.map(h => h.score);
+    function loadChart() {
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        if(chartObj) chartObj.destroy();
 
-        if(scoreHistory.length === 0) {
-            labels = ["Example Day 1", "Example Day 2", "Example Day 3"];
-            data = [60, 80, 75];
+        let labels = historyLogs.map(l => `${l.date} (${l.mode})`);
+        let data = historyLogs.map(l => l.score);
+
+        if(historyLogs.length === 0) {
+            labels = ["Demo 1", "Demo 2", "Demo 3"];
+            data = [50, 70, 90];
         }
 
-        chartInstance = new Chart(ctx, {
+        chartObj = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Mock Test Score (%)',
+                    label: 'Score Percentage (%)',
                     data: data,
                     borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    tension: 0.3,
+                    backgroundColor: 'rgba(0, 123, 255, 0.05)',
+                    tension: 0.2,
                     fill: true
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { min: 0, max: 100 } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
         });
     }
 
-    // Init
-    updateStatus();
+    // Initialize
+    updateCounts();
 </script>
 </body>
 </html>
