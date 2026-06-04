@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SSC MTS Ultimate Vocab Platform</title>
+    <title>SSC MTS Vocab Multi-Set Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #007bff; --success: #28a745; --dark: #212529; --light: #f8f9fa; }
+        :root { --primary: #007bff; --success: #28a745; --danger: #dc3545; --dark: #212529; --light: #f8f9fa; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f7; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .platform-container { background: white; width: 100%; max-width: 900px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         h1 { text-align: center; color: var(--primary); margin-bottom: 5px; font-size: 28px; }
@@ -17,29 +17,30 @@
         .panel { display: none; }
         .panel.active { display: block; }
         
-        /* Dashboard Cards */
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .menu-card { background: var(--light); border: 2px solid #dee2e6; padding: 20px; text-align: center; border-radius: 10px; cursor: pointer; transition: 0.3s; }
-        .menu-card:hover { transform: translateY(-3px); border-color: var(--primary); background: #f0f7ff; }
-        .menu-card h3 { margin: 0 0 10px 0; color: var(--dark); }
-        .menu-card p { margin: 0; font-size: 12px; color: #6c757d; }
-        .mix-card { grid-column: 1 / -1; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; }
-        .mix-card h3, .mix-card p { color: white; }
-        .mix-card:hover { background: linear-gradient(135deg, #0056b3, #004085); }
-
-        /* Quiz Styles */
-        .quiz-box { background: #fff; border: 1px solid #dee2e6; padding: 20px; border-radius: 10px; margin-top: 20px; }
-        .q-header { display: flex; justify-content: space-between; margin-bottom: 15px; color: #6c757d; font-size: 14px; }
-        .question { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: var(--dark); }
+        /* Set Selection UI */
+        .set-section { margin-bottom: 25px; background: #f1f3f5; padding: 15px; border-radius: 10px; }
+        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
+        .set-btn { background: white; border: 1px solid #ced4da; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s; }
+        .set-btn:hover, .set-btn.selected { border-color: var(--primary); color: var(--primary); background: #e7f1ff; }
+        
+        /* Options Panel */
+        .config-panel { background: #e9ecef; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+        
+        /* Quiz Layout */
+        .quiz-box { background: #fff; border: 1px solid #dee2e6; padding: 25px; border-radius: 10px; position: relative; }
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: #6c757d; font-size: 14px; }
+        .timer-badge { background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
+        .question { font-size: 19px; font-weight: bold; margin-bottom: 20px; color: var(--dark); }
         .options-list { display: flex; flex-direction: column; gap: 12px; }
         .opt-button { background: var(--light); border: 1px solid #ced4da; padding: 14px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s; }
         .opt-button:hover { background: #e9ecef; }
         .opt-button.selected { background: #e7f1ff; border-color: var(--primary); color: #0056b3; font-weight: bold; }
-        .submit-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; margin-top: 20px; cursor: pointer; }
+        
+        .action-container { display: flex; gap: 15px; margin-top: 20px; }
+        .submit-btn { flex: 2; background: var(--primary); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; }
         .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-
-        /* Graph & Data Styles */
-        .graph-box { height: 320px; margin-top: 20px; }
+        .quit-btn { flex: 1; background: var(--danger); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        
         .admin-box { background: #fff3cd; border: 1px solid #ffeeba; padding: 20px; border-radius: 10px; margin-top: 25px; }
         .admin-box textarea { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; font-family: monospace; font-size: 12px; margin-top: 10px; }
         .score-big { font-size: 50px; font-weight: bold; color: var(--success); text-align: center; margin: 20px 0; }
@@ -60,28 +61,32 @@
     <!-- PANEL 1: TEST MODES -->
     <div id="panel-test" class="panel active">
         <div id="menu-view">
-            <h2 style="margin-bottom:15px; font-size:18px;">Select Mock Test Category:</h2>
-            <div class="menu-grid">
-                <div class="menu-card" onclick="initQuiz('OWS')">
-                    <h3>One Word (OWS)</h3>
-                    <p id="count-OWS">0 Words Loaded</p>
+            <!-- Set Selector -->
+            <div class="set-section">
+                <h3 style="margin:0; font-size:16px;">📂 Select Practice Set:</h3>
+                <div class="set-grid" id="set-buttons-container">
+                    <!-- Dynamic sets buttons -->
                 </div>
-                <div class="menu-card" onclick="initQuiz('Synonym')">
-                    <h3>Synonyms</h3>
-                    <p id="count-Synonym">0 Words Loaded</p>
+            </div>
+
+            <!-- Timer Configuration -->
+            <div class="config-panel">
+                <label style="font-weight:bold; cursor:pointer;">
+                    <input type="checkbox" id="timer-toggle" onchange="toggleTimerInput()" checked> Enable Question Timer
+                </label>
+                <div id="timer-seconds-box">
+                    <label>Seconds per question: </label>
+                    <input type="number" id="timer-seconds" value="15" min="5" max="60" style="width:50px; padding:5px; border-radius:4px; border:1px solid #ccc;">
                 </div>
-                <div class="menu-card" onclick="initQuiz('Antonym')">
-                    <h3>Antonyms</h3>
-                    <p id="count-Antonym">0 Words Loaded</p>
-                </div>
-                <div class="menu-card" onclick="initQuiz('Idiom')">
-                    <h3>Idioms & Phrases</h3>
-                    <p id="count-Idiom">0 Words Loaded</p>
-                </div>
-                <div class="menu-card mix-card" onclick="initQuiz('MIX')">
-                    <h3>Full Vocab MIX Mock</h3>
-                    <p>Mix questions from all sections (MTS Real Pattern)</p>
-                </div>
+            </div>
+
+            <h2 style="margin-bottom:15px; font-size:18px;">Select Category to Start Test:</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('OWS')">One Word (OWS)</button>
+                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('Synonym')">Synonyms</button>
+                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('Antonym')">Antonyms</button>
+                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('Idiom')">Idioms & Phrases</button>
+                <button class="submit-btn" style="grid-column: 1 / -1; background: linear-gradient(135deg, #007bff, #0056b3);" onclick="startQuiz('MIX')">🚀 Start Full MIX Mock Test</button>
             </div>
         </div>
 
@@ -93,7 +98,6 @@
     <!-- PANEL 2: ANALYTICS -->
     <div id="panel-analytics" class="panel">
         <h2>Your Improvement Over Time</h2>
-        <p style="color:#6c757d; font-size:14px;">Ye graph aapke har test ka score jod kar banata hai taaki aap dekh sakein aap kitne regular hain:</p>
         <div class="graph-box">
             <canvas id="analyticsChart"></canvas>
         </div>
@@ -103,7 +107,7 @@
     <div id="panel-admin" class="panel">
         <div class="admin-box">
             <h3 style="margin:0; color:#856404;">📥 Import Daily Question Code</h3>
-            <p style="font-size:13px; color:#856404; margin: 5px 0 15px 0;">Jo code main (AI) chat me bana kar dunga use poora copy karke is niche wale box me paste kar do:</p>
+            <p style="font-size:13px; color:#856404; margin: 5px 0 15px 0;">Jo code main (AI) dunga use yahan paste karke update karein. Ye automatic naya Set bana dega:</p>
             <textarea id="import-code-area" rows="6" placeholder="Paste the generated code here..."></textarea>
             <button class="submit-btn" style="background:#28a745;" onclick="importData()">Update Platform Data</button>
         </div>
@@ -111,53 +115,59 @@
 </div>
 
 <script>
-    // Starter base data (Default Questions)
-    const defaultData = {
-        OWS: [
-            {q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Autobiography"], e: "Epitaph matlab samadhi-lekh."},
-            {q: "A person who loves books", a: "Bibliophile", o: ["Bibliophile", "Bookworm", "Linguist", "Teetotaller"], e: "Bibliophile = Pustak premi."}
-        ],
-        Synonym: [
-            {q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Industrious"], e: "Idle ka matlab hota hai aalsi ya betha hua."}
-        ],
-        Antonym: [
-            {q: "What is the antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Cruel", "Egoistic"], e: "Arrogant (Ghamandi) ka ulta Humble (Vinamra) hota hai."}
-        ],
-        Idiom: [
-            {q: "Meaning of the idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Everyday", "At midnight"], e: "Once in a blue moon matlab jo bohot kam ho."}
-        ]
-    };
+    // Initial Starter Data grouped by date/sets
+    const defaultSets = [
+        {
+            setName: "Set 1 (Starter)",
+            OWS: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Autobiography"], e: "Epitaph matlab samadhi-lekh."}],
+            Synonym: [{q: "Synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Industrious"], e: "Idle ka matlab hota hai aalsi."}],
+            Antonym: [{q: "Antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Cruel", "Egoistic"], e: "Arrogant ka ulta Humble hota hai."}],
+            Idiom: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Everyday", "At midnight"], e: "Once in a blue moon matlab jo bohot kam ho."}]
+        }
+    ];
 
-    let masterData = JSON.parse(localStorage.getItem('mts_masterData')) || defaultData;
+    let savedSets = JSON.parse(localStorage.getItem('mts_setsData')) || defaultSets;
     let historyLogs = JSON.parse(localStorage.getItem('mts_historyLogs')) || [];
+    let selectedSetName = savedSets[0].setName;
     let chartObj = null;
 
     let activeQuiz = [];
     let curQ = 0;
     let quizScore = 0;
     let chosenAnswer = null;
-    let activeMode = "";
+    let timerInterval = null;
+    let timeLeft = 0;
 
     function saveToStorage() {
-        localStorage.setItem('mts_masterData', JSON.stringify(masterData));
+        localStorage.setItem('mts_setsData', JSON.stringify(savedSets));
         localStorage.setItem('mts_historyLogs', JSON.stringify(historyLogs));
-        updateCounts();
+        renderSetButtons();
     }
 
-    function updateCounts() {
-        document.getElementById('count-OWS').innerText = `${masterData.OWS.length} Words Loaded`;
-        document.getElementById('count-Synonym').innerText = `${masterData.Synonym.length} Words Loaded`;
-        document.getElementById('count-Antonym').innerText = `${masterData.Antonym.length} Words Loaded`;
-        document.getElementById('count-Idiom').innerText = `${masterData.Idiom.length} Words Loaded`;
+    function renderSetButtons() {
+        const container = document.getElementById('set-buttons-container');
+        container.innerHTML = savedSets.map(s => `
+            <button class="set-btn ${selectedSetName === s.setName ? 'selected' : ''}" onclick="selectSet('${s.setName}')">
+                ${s.setName}
+            </button>
+        `).join('');
+    }
+
+    function selectSet(name) {
+        selectedSetName = name;
+        renderSetButtons();
+    }
+
+    function toggleTimerInput() {
+        const checked = document.getElementById('timer-toggle').checked;
+        document.getElementById('timer-seconds-box').style.visibility = checked ? 'visible' : 'hidden';
     }
 
     function switchPanel(panelName) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        
         document.querySelector(`[onclick="switchPanel('${panelName}')"]`).classList.add('active');
         document.getElementById(`panel-${panelName}`).classList.add('active');
-
         if(panelName === 'analytics') loadChart();
     }
 
@@ -167,35 +177,45 @@
 
         try {
             const parsed = JSON.parse(rawCode);
-            if(parsed.type && parsed.questions) {
-                masterData[parsed.type] = [...masterData[parsed.type], ...parsed.questions];
+            if(parsed.questions && parsed.questions.length > 0) {
+                const newSetName = `Set ${savedSets.length + 1} (${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'})})`;
+                
+                const newSet = {
+                    setName: newSetName,
+                    OWS: parsed.questions.filter(q => parsed.type === 'OWS'),
+                    Synonym: parsed.questions.filter(q => parsed.type === 'Synonym'),
+                    Antonym: parsed.questions.filter(q => parsed.type === 'Antonym'),
+                    Idiom: parsed.questions.filter(q => parsed.type === 'Idiom')
+                };
+
+                savedSets.push(newSet);
+                selectedSetName = newSetName;
                 saveToStorage();
-                alert(`Badhiya! ${parsed.questions.length} naye questions successfuly load ho gaye hain!`);
+                alert(`Zabardast! Ek naya section "${newSetName}" ban gaya hai aur usme ${parsed.questions.length} sawaal add ho gaye hain!`);
                 document.getElementById('import-code-area').value = "";
                 switchPanel('test');
             } else {
-                alert("Code ka format sahi nahi hai. Kripya sahi AI code use karein.");
+                alert("Code valid format me nahi hai.");
             }
         } catch(e) {
-            alert("Kuch galti hui! Copy karne me poora code select karein.");
+            alert("Kuch galti hui! Kripya sahi code use karein.");
         }
     }
 
-    function initQuiz(mode) {
-        activeMode = mode;
-        curQ = 0;
-        quizScore = 0;
+    function startQuiz(category) {
+        const currentSet = savedSets.find(s => s.setName === selectedSetName);
         
-        if(mode === 'MIX') {
-            activeQuiz = [...masterData.OWS, ...masterData.Synonym, ...masterData.Antonym, ...masterData.Idiom];
+        if(category === 'MIX') {
+            activeQuiz = [...currentSet.OWS, ...currentSet.Synonym, ...currentSet.Antonym, ...currentSet.Idiom];
         } else {
-            activeQuiz = masterData[mode];
+            activeQuiz = currentSet[category] || [];
         }
 
-        if(activeQuiz.length === 0) return alert("Is section me abhi tak koi sawaal nahi hai! Pehle admin me code add karo.");
-        
-        activeQuiz.sort(() => 0.5 - Math.random()); // Randomize check
-        activeQuiz = activeQuiz.slice(0, 10); // Max 10 questions per test
+        if(activeQuiz.length === 0) return alert(`Is selected Set me ${category} ke koi sawaal nahi hain! Pehle Admin me code daalein.`);
+
+        activeQuiz.sort(() => 0.5 - Math.random());
+        curQ = 0;
+        quizScore = 0;
 
         document.getElementById('menu-view').style.display = 'none';
         document.getElementById('quiz-view').style.display = 'block';
@@ -203,23 +223,42 @@
     }
 
     function showQuestion() {
+        clearInterval(timerInterval);
         chosenAnswer = null;
         const qData = activeQuiz[curQ];
-        const qView = document.getElementById('quiz-view');
+        const isTimerEnabled = document.getElementById('timer-toggle').checked;
         
+        const qView = document.getElementById('quiz-view');
         qView.innerHTML = `
             <div class="quiz-box">
                 <div class="q-header">
-                    <span>Mode: <strong>${activeMode} Mock</strong></span>
+                    <span>Set: <strong>${selectedSetName}</strong></span>
+                    ${isTimerEnabled ? `<span class="timer-badge">⏱️ Time Left: <span id="timer-clock">--</span>s</span>` : '<span>Timer: OFF</span>'}
                     <span>Question ${curQ + 1} of ${activeQuiz.length}</span>
                 </div>
                 <div class="question">${qData.q}</div>
                 <div class="options-list">
                     ${qData.o.map(opt => `<button class="opt-button" onclick="selectAnswer(this, '${opt}')">${opt}</button>`).join('')}
                 </div>
-                <button class="submit-btn" id="sub-q-btn" disabled onclick="submitQuestion()">Submit & Next</button>
+                <div class="action-container">
+                    <button class="quit-btn" onclick="quitQuiz()">Quit Test (Hatna)</button>
+                    <button class="submit-btn" id="sub-q-btn" disabled onclick="submitQuestion()">Submit & Next</button>
+                </div>
             </div>
         `;
+
+        if(isTimerEnabled) {
+            timeLeft = parseInt(document.getElementById('timer-seconds').value) || 15;
+            document.getElementById('timer-clock').innerText = timeLeft;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-clock').innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuestion(); // Auto-submit when time finishes
+                }
+            }, 1000);
+        }
     }
 
     function selectAnswer(btn, val) {
@@ -230,7 +269,8 @@
     }
 
     function submitQuestion() {
-        if(chosenAnswer === activeQuiz[curQ].a) quizScore++;
+        clearInterval(timerInterval);
+        if(chosenAnswer && chosenAnswer === activeQuiz[curQ].a) quizScore++;
         curQ++;
         if(curQ < activeQuiz.length) {
             showQuestion();
@@ -239,25 +279,30 @@
         }
     }
 
+    function quitQuiz() {
+        if(confirm("Kya aap sach me test se hatna chahte hain?")) {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-view').style.display = 'none';
+            document.getElementById('menu-view').style.display = 'block';
+        }
+    }
+
     function finishQuiz() {
         const finalPct = Math.round((quizScore / activeQuiz.length) * 100);
-        const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'});
-        
-        historyLogs.push({ date: dateStr, mode: activeMode, score: finalPct });
-        saveToStorage();
+        historyLogs.push({ date: new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'}), mode: selectedSetName, score: finalPct });
+        localStorage.setItem('mts_historyLogs', JSON.stringify(historyLogs));
 
-        const qView = document.getElementById('quiz-view');
-        qView.innerHTML = `
+        document.getElementById('quiz-view').innerHTML = `
             <div class="quiz-box" style="text-align:center;">
-                <h2>Mock Test Results</h2>
+                <h2>Mock Test Completed!</h2>
                 <div class="score-big">${quizScore} / ${activeQuiz.length}</div>
-                <p>Aapka final accuracy rate **${finalPct}%** raha.</p>
-                <button class="submit-btn" style="background:#6c757d;" onclick="exitQuiz()">Back to Dashboard</button>
+                <p>Aapka accuracy score **${finalPct}%** raha.</p>
+                <button class="submit-btn" style="background:#6c757d;" onclick="exitQuizView()">Back to Dashboard</button>
             </div>
         `;
     }
 
-    function exitQuiz() {
+    function exitQuizView() {
         document.getElementById('quiz-view').style.display = 'none';
         document.getElementById('menu-view').style.display = 'block';
     }
@@ -270,8 +315,8 @@
         let data = historyLogs.map(l => l.score);
 
         if(historyLogs.length === 0) {
-            labels = ["Demo 1", "Demo 2", "Demo 3"];
-            data = [50, 70, 90];
+            labels = ["Demo Set 1", "Demo Set 2"];
+            data = [50, 80];
         }
 
         chartObj = new Chart(ctx, {
@@ -291,8 +336,8 @@
         });
     }
 
-    // Initialize
-    updateCounts();
+    // Initialize Page
+    renderSetButtons();
 </script>
 </body>
 </html>
