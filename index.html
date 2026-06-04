@@ -3,341 +3,441 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SSC MTS Vocab Multi-Set Platform</title>
+    <title>SSC MTS Elite Exam Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #007bff; --success: #28a745; --danger: #dc3545; --dark: #212529; --light: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f7; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .platform-container { background: white; width: 100%; max-width: 900px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; font-size: 28px; }
-        .subtitle { text-align: center; color: #6c757d; margin-bottom: 30px; font-size: 14px; }
-        .nav-tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #dee2e6; margin-bottom: 25px; padding-bottom: 5px; }
-        .tab-btn { background: none; border: none; font-size: 16px; font-weight: 600; cursor: pointer; padding: 10px 20px; color: #6c757d; transition: 0.2s; }
-        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+        :root { --primary: #4f46e5; --primary-hover: #4338ca; --success: #10b981; --danger: #ef4444; --dark: #0f172a; --light: #f8fafc; --border: #e2e8f0; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; display: flex; justify-content: center; color: var(--dark); }
+        .platform-container { background: white; width: 100%; max-width: 950px; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        
+        /* Header Header Styling */
+        .header-main { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .header-main h1 { color: var(--dark); margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.025em; }
+        .header-main p { color: #64748b; margin: 8px 0 0 0; font-size: 15px; }
+        
+        /* Premium Tabs */
+        .nav-tabs { display: flex; gap: 8px; background: #e2e8f0; padding: 4px; border-radius: 8px; margin-bottom: 30px; }
+        .tab-btn { flex: 1; background: none; border: none; font-size: 15px; font-weight: 600; cursor: pointer; padding: 10px; border-radius: 6px; color: #475569; transition: all 0.2s; }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+        
         .panel { display: none; }
         .panel.active { display: block; }
         
-        /* Set Selection UI */
-        .set-section { margin-bottom: 25px; background: #f1f3f5; padding: 15px; border-radius: 10px; }
-        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-        .set-btn { background: white; border: 1px solid #ced4da; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s; }
-        .set-btn:hover, .set-btn.selected { border-color: var(--primary); color: var(--primary); background: #e7f1ff; }
+        /* Professional Setup Panel */
+        .set-section { background: var(--light); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+        .section-title { font-size: 16px; font-weight: 700; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; }
+        .set-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .set-btn { background: white; border: 1px solid var(--border); padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .set-btn:hover, .set-btn.selected { border-color: var(--primary); color: var(--primary); background: #f5f3ff; }
         
-        /* Options Panel */
-        .config-panel { background: #e9ecef; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+        .config-flex { display: flex; flex-wrap: wrap; gap: 20px; background: var(--light); border: 1px solid var(--border); padding: 15px 20px; border-radius: 12px; margin-bottom: 25px; align-items: center; }
+        .toggle-container { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
         
-        /* Quiz Layout */
-        .quiz-box { background: #fff; border: 1px solid #dee2e6; padding: 25px; border-radius: 10px; position: relative; }
-        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: #6c757d; font-size: 14px; }
-        .timer-badge { background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
-        .question { font-size: 19px; font-weight: bold; margin-bottom: 20px; color: var(--dark); }
-        .options-list { display: flex; flex-direction: column; gap: 12px; }
-        .opt-button { background: var(--light); border: 1px solid #ced4da; padding: 14px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s; }
-        .opt-button:hover { background: #e9ecef; }
-        .opt-button.selected { background: #e7f1ff; border-color: var(--primary); color: #0056b3; font-weight: bold; }
+        /* Category Selection Buttons */
+        .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .mode-action-btn { background: white; border: 1px solid var(--border); padding: 16px; font-size: 15px; font-weight: 700; border-radius: 10px; cursor: pointer; text-align: left; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .mode-action-btn:hover { border-color: var(--primary); color: var(--primary); background: #f5f3ff; transform: translateY(-1px); }
+        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; font-size: 16px; justify-content: center; }
+        .mix-action-btn:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); transform: translateY(-1px); color: white; }
+
+        /* Modern Quiz Layout */
+        .quiz-box { border: 1px solid var(--border); padding: 30px; border-radius: 14px; background: white; }
+        .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .timer-panel { background: #fee2e2; color: #991b1b; padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+        .question-text { font-size: 20px; font-weight: 700; margin-bottom: 25px; line-height: 1.5; }
+        .options-stack { display: flex; flex-direction: column; gap: 12px; }
+        .opt-row { background: var(--light); border: 1px solid var(--border); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.15s; }
+        .opt-row:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .opt-row.selected { background: #eef2ff; border-color: var(--primary); color: var(--primary); font-weight: 700; }
         
-        .action-container { display: flex; gap: 15px; margin-top: 20px; }
-        .submit-btn { flex: 2; background: var(--primary); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-        .quit-btn { flex: 1; background: var(--danger); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        .nav-controls { display: flex; gap: 15px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .control-btn { padding: 12px 24px; font-size: 15px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: none; }
+        .btn-submit-next { flex: 2; background: var(--primary); color: white; }
+        .btn-submit-next:hover { background: var(--primary-hover); }
+        .btn-submit-next:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .btn-quit { flex: 1; background: #fff; border: 1px solid var(--danger); color: var(--danger); }
+        .btn-quit:hover { background: #fef2f2; }
+
+        /* Professional Admin Workspace Layout */
+        .workspace-card { border: 1px solid var(--border); border-radius: 12px; background: white; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); }
+        .workspace-card h3 { margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: #1e293b; }
+        .workspace-card p { margin: 0 0 20px 0; font-size: 14px; color: #64748b; }
+        .input-grid-admin { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-field-wrapper { display: flex; flex-direction: column; gap: 6px; }
+        .input-field-wrapper label { font-size: 13px; font-weight: 600; color: #475569; }
+        .admin-input { padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; transition: all 0.2s; }
+        .admin-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         
-        .admin-box { background: #fff3cd; border: 1px solid #ffeeba; padding: 20px; border-radius: 10px; margin-top: 25px; }
-        .admin-box textarea { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #ced4da; font-family: monospace; font-size: 12px; margin-top: 10px; }
-        .score-big { font-size: 50px; font-weight: bold; color: var(--success); text-align: center; margin: 20px 0; }
+        /* Results View */
+        .score-card-big { background: var(--light); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--border); max-width: 400px; margin: 0 auto 30px auto; }
+        .score-num { font-size: 54px; font-weight: 800; color: var(--primary); margin: 10px 0; }
+        .stat-badge-row { display: flex; justify-content: center; gap: 15px; font-weight: 700; font-size: 14px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="platform-container">
-    <h1>SSC MTS Ultimate Vocab Platform</h1>
-    <div class="subtitle">Daily Targeted Practice & Continuous Improvement Tracker</div>
+    <div class="header-main">
+        <h1>SSC MTS Elite Vocab Platform</h1>
+        <p>Real Exam Pattern Continuous Practice Environment (+3 / -1 Marking System)</p>
+    </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchPanel('test')">🎯 Take Test / Choose Mode</button>
-        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Progress Tracker Graph</button>
-        <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Add Daily Words (Admin)</button>
+        <button class="tab-btn active" onclick="switchPanel('test')">🎯 Practice Mock Board</button>
+        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Advanced Analytics Graph</button>
+        <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Control Panel Workspace</button>
     </div>
 
-    <!-- PANEL 1: TEST MODES -->
+    <!-- PANEL 1: TESTING SUITE -->
     <div id="panel-test" class="panel active">
         <div id="menu-view">
-            <!-- Set Selector -->
             <div class="set-section">
-                <h3 style="margin:0; font-size:16px;">📂 Select Practice Set:</h3>
-                <div class="set-grid" id="set-buttons-container">
-                    <!-- Dynamic sets buttons -->
-                </div>
+                <div class="section-title">📂 Available Lesson Sets</div>
+                <div class="set-grid" id="set-buttons-container"></div>
             </div>
 
-            <!-- Timer Configuration -->
-            <div class="config-panel">
-                <label style="font-weight:bold; cursor:pointer;">
-                    <input type="checkbox" id="timer-toggle" onchange="toggleTimerInput()" checked> Enable Question Timer
+            <div class="config-flex">
+                <label class="toggle-container">
+                    <input type="checkbox" id="timer-toggle" onchange="toggleTimerVisibility()" checked> Enable Full Mock Timer
                 </label>
-                <div id="timer-seconds-box">
-                    <label>Seconds per question: </label>
-                    <input type="number" id="timer-seconds" value="15" min="5" max="60" style="width:50px; padding:5px; border-radius:4px; border:1px solid #ccc;">
+                <div id="timer-config-box" style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                    <label style="font-weight: 600; color:#475569;">Duration (Minutes): </label>
+                    <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:60px; padding:6px;">
                 </div>
             </div>
 
-            <h2 style="margin-bottom:15px; font-size:18px;">Select Category to Start Test:</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('OWS')">One Word (OWS)</button>
-                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('Synonym')">Synonyms</button>
-                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('Antonym')">Antonyms</button>
-                <button class="submit-btn" style="background:#6c757d;" onclick="startQuiz('Idiom')">Idioms & Phrases</button>
-                <button class="submit-btn" style="grid-column: 1 / -1; background: linear-gradient(135deg, #007bff, #0056b3);" onclick="startQuiz('MIX')">🚀 Start Full MIX Mock Test</button>
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 15px;">Launch Targeted Test Section:</h3>
+            <div class="btn-grid">
+                <button class="mode-action-btn" onclick="startQuiz('OWS')"><span>One Word (OWS)</span> <span>➔</span></button>
+                <button class="mode-action-btn" onclick="startQuiz('Synonym')"><span>Synonyms</span> <span>➔</span></button>
+                <button class="mode-action-btn" onclick="startQuiz('Antonym')"><span>Antonyms</span> <span>➔</span></button>
+                <button class="mode-action-btn" onclick="startQuiz('Idiom')"><span>Idioms & Phrases</span> <span>➔</span></button>
+                <button class="mode-action-btn mix-action-btn" onclick="startQuiz('MIX')">🚀 Launch Comprehensive MIX Mock Test</button>
             </div>
         </div>
 
-        <div id="quiz-view" style="display:none;">
-            <!-- Dynamic quiz elements go here -->
-        </div>
+        <div id="quiz-view" style="display:none;"></div>
     </div>
 
-    <!-- PANEL 2: ANALYTICS -->
+    <!-- PANEL 2: PERFORMANCE INTELLIGENCE -->
     <div id="panel-analytics" class="panel">
-        <h2>Your Improvement Over Time</h2>
+        <h2 style="font-size:18px; font-weight:700; margin-bottom:15px;">Category-Wise Metric Progress Graph</h2>
         <div class="graph-box">
             <canvas id="analyticsChart"></canvas>
         </div>
     </div>
 
-    <!-- PANEL 3: CODE UPDATE (ADMIN) -->
+    <!-- PANEL 3: PROFESSIONAL CONTROL WORKSPACE -->
     <div id="panel-admin" class="panel">
-        <div class="admin-box">
-            <h3 style="margin:0; color:#856404;">📥 Import Daily Question Code</h3>
-            <p style="font-size:13px; color:#856404; margin: 5px 0 15px 0;">Jo code main (AI) dunga use yahan paste karke update karein. Ye automatic naya Set bana dega:</p>
-            <textarea id="import-code-area" rows="6" placeholder="Paste the generated code here..."></textarea>
-            <button class="submit-btn" style="background:#28a745;" onclick="importData()">Update Platform Data</button>
+        <div class="workspace-card">
+            <h3>📝 Quick Word Registrar</h3>
+            <p>Manually insert single entries directly to the current set.</p>
+            <div class="input-grid-admin">
+                <div class="input-field-wrapper">
+                    <label>Category Type</label>
+                    <select id="quick-type" class="admin-input">
+                        <option value="OWS">One Word Substitution (OWS)</option>
+                        <option value="Synonym">Synonym</option>
+                        <option value="Antonym">Antonym</option>
+                        <option value="Idiom">Idiom & Phrase</option>
+                    </select>
+                </div>
+                <div class="input-field-wrapper">
+                    <label>Target Word / Idiom</label>
+                    <input type="text" id="quick-word" placeholder="E.g., Obsolete" class="admin-input">
+                </div>
+            </div>
+            <div class="input-field-wrapper" style="margin-bottom: 15px;">
+                <label>Definition / Question Prompt</label>
+                <input type="text" id="quick-meaning" placeholder="E.g., No longer in use because it is outdated" class="admin-input">
+            </div>
+            <button class="control-btn btn-submit-next" style="width:100%; border-radius:6px;" onclick="addQuickWord()">Commit Word Entry</button>
+        </div>
+
+        <div class="workspace-card" style="background: #faf5ff; border-color: #e9d5ff;">
+            <h3 style="color: #6b21a8;">📥 Batch Import Automation Data</h3>
+            <p>Paste the dedicated structured code block generated by the AI to seamlessly spawn separate operational mock sets.</p>
+            <textarea id="import-code-area" rows="5" class="admin-input" style="font-family: monospace; font-size:13px;" placeholder="Paste the code block here..."></textarea>
+            <button class="control-btn btn-submit-next" style="background:#8b5cf6; width:100%; border-radius:6px; margin-top:15px;" onclick="importBatchData()">Execute Batch Deployment</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Initial Starter Data grouped by date/sets
-    const defaultSets = [
+    const defaultData = [
         {
-            setName: "Set 1 (Starter)",
-            OWS: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Autobiography"], e: "Epitaph matlab samadhi-lekh."}],
-            Synonym: [{q: "Synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Industrious"], e: "Idle ka matlab hota hai aalsi."}],
-            Antonym: [{q: "Antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Cruel", "Egoistic"], e: "Arrogant ka ulta Humble hota hai."}],
-            Idiom: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Everyday", "At midnight"], e: "Once in a blue moon matlab jo bohot kam ho."}]
+            setName: "Set 1 (Starter Pack)",
+            OWS: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Manuscript"], e: "Epitaph = Samadhi lekh."}],
+            Synonym: [{q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Alert"], e: "Idle matlab aalsi."}],
+            Antonym: [{q: "What is the antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Vain", "Rude"], e: "Arrogant ka ulta Humble hota hai."}],
+            Idiom: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Daily", "Never"], e: "Once in a blue moon = Bohot kam hone wala."}]
         }
     ];
 
-    let savedSets = JSON.parse(localStorage.getItem('mts_setsData')) || defaultSets;
-    let historyLogs = JSON.parse(localStorage.getItem('mts_historyLogs')) || [];
-    let selectedSetName = savedSets[0].setName;
-    let chartObj = null;
+    let sessionSets = JSON.parse(localStorage.getItem('mts_pro_sets')) || defaultData;
+    let analyticsData = JSON.parse(localStorage.getItem('mts_pro_metrics')) || [];
+    let currentActiveSetName = sessionSets[0].setName;
+    let chartInstance = null;
 
-    let activeQuiz = [];
-    let curQ = 0;
-    let quizScore = 0;
-    let chosenAnswer = null;
-    let timerInterval = null;
-    let timeLeft = 0;
+    let testSuiteQuestions = [];
+    let activeQIdx = 0;
+    let selectedAnswerVal = null;
+    let globalTimer = null;
+    let totalSecondsLeft = 0;
 
-    function saveToStorage() {
-        localStorage.setItem('mts_setsData', JSON.stringify(savedSets));
-        localStorage.setItem('mts_historyLogs', JSON.stringify(historyLogs));
-        renderSetButtons();
+    // Scoring variables
+    let correctCount = 0;
+    let wrongCount = 0;
+    let unansweredCount = 0;
+
+    function saveState() {
+        localStorage.setItem('mts_pro_sets', JSON.stringify(sessionSets));
+        localStorage.setItem('mts_pro_metrics', JSON.stringify(analyticsData));
+        buildSetSelectors();
     }
 
-    function renderSetButtons() {
+    function buildSetSelectors() {
         const container = document.getElementById('set-buttons-container');
-        container.innerHTML = savedSets.map(s => `
-            <button class="set-btn ${selectedSetName === s.setName ? 'selected' : ''}" onclick="selectSet('${s.setName}')">
+        container.innerHTML = sessionSets.map(s => `
+            <button class="set-btn ${currentActiveSetName === s.setName ? 'selected' : ''}" onclick="changeActiveSet('${s.setName}')">
                 ${s.setName}
             </button>
         `).join('');
     }
 
-    function selectSet(name) {
-        selectedSetName = name;
-        renderSetButtons();
+    function changeActiveSet(name) {
+        currentActiveSetName = name;
+        buildSetSelectors();
     }
 
-    function toggleTimerInput() {
+    function toggleTimerVisibility() {
         const checked = document.getElementById('timer-toggle').checked;
-        document.getElementById('timer-seconds-box').style.visibility = checked ? 'visible' : 'hidden';
+        document.getElementById('timer-config-box').style.visibility = checked ? 'visible' : 'hidden';
     }
 
-    function switchPanel(panelName) {
+    function switchPanel(name) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelector(`[onclick="switchPanel('${panelName}')"]`).classList.add('active');
-        document.getElementById(`panel-${panelName}`).classList.add('active');
-        if(panelName === 'analytics') loadChart();
+        document.querySelector(`[onclick="switchPanel('${name}')"]`).classList.add('active');
+        document.getElementById(`panel-${name}`).classList.add('active');
+        if(name === 'analytics') renderAnalyticsChart();
     }
 
-    function importData() {
-        const rawCode = document.getElementById('import-code-area').value.trim();
-        if(!rawCode) return alert("Pehle code paste karein!");
+    function addQuickWord() {
+        const type = document.getElementById('quick-type').value;
+        const word = document.getElementById('quick-word').value.trim();
+        const meaning = document.getElementById('quick-meaning').value.trim();
+        
+        if(!word || !meaning) return alert("All fields are mandatory!");
+        
+        let targetSet = sessionSets.find(s => s.setName === currentActiveSetName);
+        
+        // Dynamic options creation
+        let optionsPool = ["Options Alpha", "Options Beta", "Options Gamma"];
+        let generatedOptions = [word, ...optionsPool].sort(() => 0.5 - Math.random());
+
+        targetSet[type].push({
+            q: type === 'OWS' || type === 'Idiom' ? `${meaning}` : `Find the matching parameter for: '${word}'`,
+            a: word,
+            o: generatedOptions,
+            e: `Direct addition of raw word: ${word}`
+        });
+
+        saveState();
+        alert(`Successfully added entry to ${currentActiveSetName}!`);
+        document.getElementById('quick-word').value = "";
+        document.getElementById('quick-meaning').value = "";
+    }
+
+    function importBatchData() {
+        const text = document.getElementById('import-code-area').value.trim();
+        if(!text) return alert("Paste code block first!");
 
         try {
-            const parsed = JSON.parse(rawCode);
-            if(parsed.questions && parsed.questions.length > 0) {
-                const newSetName = `Set ${savedSets.length + 1} (${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'})})`;
-                
-                const newSet = {
+            const parsed = JSON.parse(text);
+            if(parsed.questions && parsed.type) {
+                const newSetName = `Set ${sessionSets.length + 1} (${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'})})`;
+                const containerObject = {
                     setName: newSetName,
-                    OWS: parsed.questions.filter(q => parsed.type === 'OWS'),
-                    Synonym: parsed.questions.filter(q => parsed.type === 'Synonym'),
-                    Antonym: parsed.questions.filter(q => parsed.type === 'Antonym'),
-                    Idiom: parsed.questions.filter(q => parsed.type === 'Idiom')
+                    OWS: parsed.type === 'OWS' ? parsed.questions : [],
+                    Synonym: parsed.type === 'Synonym' ? parsed.questions : [],
+                    Antonym: parsed.type === 'Antonym' ? parsed.questions : [],
+                    Idiom: parsed.type === 'Idiom' ? parsed.questions : []
                 };
-
-                savedSets.push(newSet);
-                selectedSetName = newSetName;
-                saveToStorage();
-                alert(`Zabardast! Ek naya section "${newSetName}" ban gaya hai aur usme ${parsed.questions.length} sawaal add ho gaye hain!`);
+                sessionSets.push(containerObject);
+                currentActiveSetName = newSetName;
+                saveState();
+                alert(`Batch executed successfully! Created "${newSetName}".`);
                 document.getElementById('import-code-area').value = "";
                 switchPanel('test');
-            } else {
-                alert("Code valid format me nahi hai.");
             }
-        } catch(e) {
-            alert("Kuch galti hui! Kripya sahi code use karein.");
-        }
+        } catch(e) { alert("Parsing error! Validate data integrity."); }
     }
 
-    function startQuiz(category) {
-        const currentSet = savedSets.find(s => s.setName === selectedSetName);
-        
-        if(category === 'MIX') {
-            activeQuiz = [...currentSet.OWS, ...currentSet.Synonym, ...currentSet.Antonym, ...currentSet.Idiom];
+    function startQuiz(cat) {
+        const targetSet = sessionSets.find(s => s.setName === currentActiveSetName);
+        if(cat === 'MIX') {
+            testSuiteQuestions = [...targetSet.OWS, ...targetSet.Synonym, ...targetSet.Antonym, ...targetSet.Idiom];
         } else {
-            activeQuiz = currentSet[category] || [];
+            testSuiteQuestions = targetSet[cat] || [];
         }
 
-        if(activeQuiz.length === 0) return alert(`Is selected Set me ${category} ke koi sawaal nahi hain! Pehle Admin me code daalein.`);
+        if(testSuiteQuestions.length === 0) return alert("No questions available in this current section pack.");
 
-        activeQuiz.sort(() => 0.5 - Math.random());
-        curQ = 0;
-        quizScore = 0;
+        testSuiteQuestions.sort(() => 0.5 - Math.random());
+        activeQIdx = 0;
+        correctCount = 0; wrongCount = 0; unansweredCount = 0;
 
         document.getElementById('menu-view').style.display = 'none';
         document.getElementById('quiz-view').style.display = 'block';
-        showQuestion();
-    }
 
-    function showQuestion() {
-        clearInterval(timerInterval);
-        chosenAnswer = null;
-        const qData = activeQuiz[curQ];
-        const isTimerEnabled = document.getElementById('timer-toggle').checked;
-        
-        const qView = document.getElementById('quiz-view');
-        qView.innerHTML = `
-            <div class="quiz-box">
-                <div class="q-header">
-                    <span>Set: <strong>${selectedSetName}</strong></span>
-                    ${isTimerEnabled ? `<span class="timer-badge">⏱️ Time Left: <span id="timer-clock">--</span>s</span>` : '<span>Timer: OFF</span>'}
-                    <span>Question ${curQ + 1} of ${activeQuiz.length}</span>
-                </div>
-                <div class="question">${qData.q}</div>
-                <div class="options-list">
-                    ${qData.o.map(opt => `<button class="opt-button" onclick="selectAnswer(this, '${opt}')">${opt}</button>`).join('')}
-                </div>
-                <div class="action-container">
-                    <button class="quit-btn" onclick="quitQuiz()">Quit Test (Hatna)</button>
-                    <button class="submit-btn" id="sub-q-btn" disabled onclick="submitQuestion()">Submit & Next</button>
-                </div>
-            </div>
-        `;
-
-        if(isTimerEnabled) {
-            timeLeft = parseInt(document.getElementById('timer-seconds').value) || 15;
-            document.getElementById('timer-clock').innerText = timeLeft;
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer-clock').innerText = timeLeft;
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    submitQuestion(); // Auto-submit when time finishes
+        // Setup Single Mock Timer
+        const useTimer = document.getElementById('timer-toggle').checked;
+        if(useTimer) {
+            let minutes = parseInt(document.getElementById('mock-minutes').value) || 5;
+            totalSecondsLeft = minutes * 60;
+            executeClockCycle();
+            globalTimer = setInterval(() => {
+                totalSecondsLeft--;
+                executeClockCycle();
+                if(totalSecondsLeft <= 0) {
+                    clearInterval(globalTimer);
+                    alert("Time's up for the entire mock session!");
+                    unansweredCount += (testSuiteQuestions.length - activeQIdx);
+                    terminateMockSession();
                 }
             }, 1000);
         }
+
+        renderQuizQuestion(useTimer);
     }
 
-    function selectAnswer(btn, val) {
-        document.querySelectorAll('.opt-button').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        chosenAnswer = val;
-        document.getElementById('sub-q-btn').disabled = false;
+    function executeClockCycle() {
+        const m = Math.floor(totalSecondsLeft / 60);
+        const s = totalSecondsLeft % 60;
+        const element = document.getElementById('timer-clock-display');
+        if(element) element.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    function submitQuestion() {
-        clearInterval(timerInterval);
-        if(chosenAnswer && chosenAnswer === activeQuiz[curQ].a) quizScore++;
-        curQ++;
-        if(curQ < activeQuiz.length) {
-            showQuestion();
+    function renderQuizQuestion(timerFlag) {
+        selectedAnswerVal = null;
+        const currentData = testSuiteQuestions[activeQIdx];
+        const container = document.getElementById('quiz-view');
+
+        container.innerHTML = `
+            <div class="quiz-box">
+                <div class="quiz-top-bar">
+                    <span style="font-weight:700; color:#475569;">Target Scope: ${currentActiveSetName}</span>
+                    ${timerFlag ? `<div class="timer-panel">⏱️ Total Time Left: <span id="timer-clock-display"></span></div>` : '<span>Continuous Session</span>'}
+                    <span style="font-weight:600; color:#475569;">Item ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
+                </div>
+                <div class="question-text">${currentData.q}</div>
+                <div class="options-stack">
+                    ${currentData.o.map(opt => `<div class="opt-row" onclick="pickQuizOption(this, '${opt}')">${opt}</div>`).join('')}
+                </div>
+                <div class="nav-controls">
+                    <button class="control-btn btn-quit" onclick="forceQuitSession()">Exit Session</button>
+                    <button class="control-btn btn-submit-next" id="next-act-btn" disabled onclick="advanceTestTrack()">Submit & Forward</button>
+                </div>
+            </div>
+        `;
+        if(timerFlag) executeClockCycle();
+    }
+
+    function pickQuizOption(target, value) {
+        document.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+        target.classList.add('selected');
+        selectedAnswerVal = value;
+        document.getElementById('next-act-btn').disabled = false;
+    }
+
+    function advanceTestTrack() {
+        const correctValue = testSuiteQuestions[activeQIdx].a;
+        if(selectedAnswerVal === correctValue) {
+            correctCount++;
         } else {
-            finishQuiz();
+            wrongCount++;
+        }
+
+        activeQIdx++;
+        if(activeQIdx < testSuiteQuestions.length) {
+            renderQuizQuestion(document.getElementById('timer-toggle').checked);
+        } else {
+            clearInterval(globalTimer);
+            terminateMockSession();
         }
     }
 
-    function quitQuiz() {
-        if(confirm("Kya aap sach me test se hatna chahte hain?")) {
-            clearInterval(timerInterval);
+    function forceQuitSession() {
+        if(confirm("Exit mock dashboard? Current points status will be lost.")) {
+            clearInterval(globalTimer);
             document.getElementById('quiz-view').style.display = 'none';
             document.getElementById('menu-view').style.display = 'block';
         }
     }
 
-    function finishQuiz() {
-        const finalPct = Math.round((quizScore / activeQuiz.length) * 100);
-        historyLogs.push({ date: new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'}), mode: selectedSetName, score: finalPct });
-        localStorage.setItem('mts_historyLogs', JSON.stringify(historyLogs));
+    function terminateMockSession() {
+        const totalAwardedPoints = (correctCount * 3) - (wrongCount * 1);
+        const logStamp = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'});
+        
+        analyticsData.push({ date: logStamp, set: currentActiveSetName, points: totalAwardedPoints });
+        localStorage.setItem('mts_pro_metrics', JSON.stringify(analyticsData));
 
-        document.getElementById('quiz-view').innerHTML = `
+        const container = document.getElementById('quiz-view');
+        container.innerHTML = `
             <div class="quiz-box" style="text-align:center;">
-                <h2>Mock Test Completed!</h2>
-                <div class="score-big">${quizScore} / ${activeQuiz.length}</div>
-                <p>Aapka accuracy score **${finalPct}%** raha.</p>
-                <button class="submit-btn" style="background:#6c757d;" onclick="exitQuizView()">Back to Dashboard</button>
+                <h2>Exam Statistics Report</h2>
+                <div class="score-card-big">
+                    <div>Final Awarded Marks</div>
+                    <div class="score-num">${totalAwardedPoints}</div>
+                    <div style="font-size:13px; color:#64748b;">Marking criteria calculated via real SSC guidelines (+3 / -1)</div>
+                </div>
+                <div class="stat-badge-row">
+                    <span style="color:var(--success)">✅ Correct: ${correctCount}</span> | 
+                    <span style="color:var(--danger)">❌ Wrong: ${wrongCount}</span> | 
+                    <span style="color:#64748b;">⏳ Skipped/Left: ${unansweredCount}</span>
+                </div>
+                <button class="control-btn btn-submit-next" style="margin-top:30px; max-width:250px;" onclick="closeQuizBoardView()">Return to Grid</button>
             </div>
         `;
     }
 
-    function exitQuizView() {
+    function closeQuizBoardView() {
         document.getElementById('quiz-view').style.display = 'none';
         document.getElementById('menu-view').style.display = 'block';
     }
 
-    function loadChart() {
+    function renderAnalyticsChart() {
         const ctx = document.getElementById('analyticsChart').getContext('2d');
-        if(chartObj) chartObj.destroy();
+        if(chartInstance) chartInstance.destroy();
 
-        let labels = historyLogs.map(l => `${l.date} (${l.mode})`);
-        let data = historyLogs.map(l => l.score);
+        let steps = analyticsData.map(d => `${d.date} (${d.set})`);
+        let coordinatePoints = analyticsData.map(d => d.points);
 
-        if(historyLogs.length === 0) {
-            labels = ["Demo Set 1", "Demo Set 2"];
-            data = [50, 80];
+        if(analyticsData.length === 0) {
+            steps = ["Baseline Test", "Evaluation Pack"];
+            coordinatePoints = [10, 25];
         }
 
-        chartObj = new Chart(ctx, {
+        chartInstance = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: steps,
                 datasets: [{
-                    label: 'Score Percentage (%)',
-                    data: data,
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.05)',
-                    tension: 0.2,
+                    label: 'Net Awarded Points (MTS Standard)',
+                    data: coordinatePoints,
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                    tension: 0.15,
                     fill: true
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
+            options: { responsive: true, maintainAspectRatio: false }
         });
     }
 
-    // Initialize Page
-    renderSetButtons();
+    // Init
+    buildSetSelectors();
 </script>
 </body>
 </html>
