@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart OWS Daily Mock Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .dashboard { background: white; width: 100%; max-width: 800px; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h1 { text-align: center; color: #007bff; margin-bottom: 25px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #dee2e6; padding-bottom: 10px; }
+        .tab-btn { background: none; border: none; font-size: 16px; font-weight: bold; cursor: pointer; padding: 8px 16px; color: #6c757d; }
+        .tab-btn.active { color: #007bff; border-bottom: 3px solid #007bff; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; }
+        input, textarea { padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; }
+        button.main-btn { background: #007bff; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; transition: 0.2s; }
+        button.main-btn:hover { background: #0056b3; }
+        .word-count { font-size: 14px; color: #28a745; font-weight: bold; margin-bottom: 15px; }
+        .question { font-size: 18px; font-weight: bold; margin: 20px 0; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .opt-btn { background: #f8f9fa; border: 1px solid #ced4da; padding: 12px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 15px; }
+        .opt-btn.selected { background: #e7f1ff; border-color: #007bff; font-weight: bold; }
+        .graph-container { position: relative; height: 300px; width: 100%; }
+        .score-display { font-size: 40px; font-weight: bold; color: #28a745; text-align: center; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <h1>Smart OWS Daily Mock Hub</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('manage')">1. Add Words & Test</button>
+        <button class="tab-btn" onclick="switchTab('analytics')">2. Score Tracker Graph</button>
+    </div>
+
+    <!-- TAB 1: MANAGE & QUIZ -->
+    <div id="manage-panel" class="panel active">
+        <div class="input-group">
+            <h3>Add New OWS Word</h3>
+            <input type="text" id="word-input" placeholder="E.g., Epitaph">
+            <textarea id="meaning-input" placeholder="E.g., Words inscribed on a tomb or gravestone" rows="2"></textarea>
+            <button class="main-btn" style="background:#28a745;" onclick="saveWord()">Add to My Book</button>
+        </div>
+
+        <div class="word-count" id="count-status">Total Words Saved: 0</div>
+        <button class="main-btn" id="start-btn" onclick="startQuiz()">Generate Mock Test (Min 4 words needed)</button>
+
+        <div id="quiz-area" style="display:none; margin-top:25px; border-top:2px dashed #ccc; padding-top:20px;">
+            <!-- Quiz area will populate dynamically -->
+        </div>
+    </div>
+
+    <!-- TAB 2: GRAPH / TRACKER -->
+    <div id="analytics-panel" class="panel">
+        <h3>Your Performance Graph</h3>
+        <p style="color:#6c757d; font-size:14px;">Ye graph dikhata hai ki aapka daily score improve ho raha hai ya nahi:</p>
+        <div class="graph-container">
+            <canvas id="scoreChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    // LocalStorage se data load karna ya default set karna
+    let wordBank = JSON.parse(localStorage.getItem('ows_wordBank')) || [];
+    let scoreHistory = JSON.parse(localStorage.getItem('ows_scoreHistory')) || [];
+    let chartInstance = null;
+
+    let currentIdx = 0;
+    let score = 0;
+    let selectedOpt = null;
+    let activeQuizData = [];
+
+    function updateStatus() {
+        document.getElementById('count-status').innerText = `Total Words Saved in Your Book: ${wordBank.length}`;
+        if(wordBank.length >= 4) {
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('start-btn').innerText = "🎯 Start Dynamic Mock Test";
+        } else {
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('start-btn').innerText = `Add ${4 - wordBank.length} more words to unlock Mock Test`;
+        }
+    }
+
+    function saveWord() {
+        const w = document.getElementById('word-input').value.trim();
+        const m = document.getElementById('meaning-input').value.trim();
+        if(!w || !m) return alert("Please fill both word and meaning!");
+
+        wordBank.push({ word: w, meaning: m });
+        localStorage.setItem('ows_wordBank', JSON.stringify(wordBank));
+        
+        document.getElementById('word-input').value = '';
+        document.getElementById('meaning-input').value = '';
+        updateStatus();
+        alert(`"${w}" aapki list me add ho gaya hai!`);
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        
+        if(tab === 'manage') {
+            document.querySelector('[onclick="switchTab(\'manage\')"]').classList.add('active');
+            document.getElementById('manage-panel').classList.add('active');
+        } else {
+            document.querySelector('[onclick="switchTab(\'analytics\')"]').classList.add('active');
+            document.getElementById('analytics-panel').classList.add('active');
+            renderChart();
+        }
+    }
+
+    function startQuiz() {
+        if(wordBank.length < 4) return;
+        document.getElementById('quiz-area').style.display = 'block';
+        currentIdx = 0;
+        score = 0;
+        
+        // Shuffle and prepare data
+        activeQuizData = [...wordBank].sort(() => 0.5 - Math.random()).slice(0, 10); // Max 10 questions
+        loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+        selectedOpt = null;
+        const currentItem = activeQuizData[currentIdx];
+        
+        // Generate options (1 right, 3 wrong from bank)
+        let options = [currentItem.word];
+        let wrongPool = wordBank.filter(w => w.word !== currentItem.word).map(w => w.word);
+        wrongPool.sort(() => 0.5 - Math.random());
+        for(let i=0; i<3 && i<wrongPool.length; i++) {
+            options.push(wrongPool[i]);
+        }
+        options.sort(() => 0.5 - Math.random());
+
+        const quizArea = document.getElementById('quiz-area');
+        quizArea.innerHTML = `
+            <div class="question">Q${currentIdx+1}: ${currentItem.meaning}</div>
+            <div class="options">
+                ${options.map(o => `<button class="opt-btn" onclick="selectOpt(this, '${o}')">${o}</button>`).join('')}
+            </div>
+            <button class="main-btn" style="margin-top:15px;" id="next-q-btn" disabled onclick="nextQuizQuestion()">Submit Answer</button>
+        `;
+    }
+
+    function selectOpt(btn, val) {
+        document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedOpt = val;
+        document.getElementById('next-q-btn').disabled = false;
+    }
+
+    function nextQuizQuestion() {
+        if(selectedOpt === activeQuizData[currentIdx].word) {
+            score++;
+        }
+        currentIdx++;
+        if(currentIdx < activeQuizData.length) {
+            loadQuizQuestion();
+        } else {
+            endQuiz();
+        }
+    }
+
+    function endQuiz() {
+        const percentage = Math.round((score / activeQuizData.length) * 100);
+        const today = new Date().toLocaleDateString('en-IN', {day: 'numeric', month: 'short'});
+        
+        // Score ko history me save karna
+        scoreHistory.push({ date: today, score: percentage });
+        localStorage.setItem('ows_scoreHistory', JSON.stringify(scoreHistory));
+
+        document.getElementById('quiz-area').innerHTML = `
+            <h3>Test Finished!</h3>
+            <div class="score-display">${score} / ${activeQuizData.length}</div>
+            <p style="text-align:center;">Aapne ${percentage}% score kiya hai. Ye data aapke tracker graph me add ho gaya hai!</p>
+            <button class="main-btn" onclick="document.getElementById('quiz-area').style.display='none'">Close Test</button>
+        `;
+    }
+
+    function renderChart() {
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        if(chartInstance) chartInstance.destroy();
+
+        // Agar data khali ho to dummy data dikhayein graph me design ke liye
+        let labels = scoreHistory.map(h => h.date);
+        let data = scoreHistory.map(h => h.score);
+
+        if(scoreHistory.length === 0) {
+            labels = ["Example Day 1", "Example Day 2", "Example Day 3"];
+            data = [60, 80, 75];
+        }
+
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Mock Test Score (%)',
+                    data: data,
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { min: 0, max: 100 } }
+            }
+        });
+    }
+
+    // Init
+    updateStatus();
+</script>
+</body>
+</html>
