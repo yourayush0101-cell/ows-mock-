@@ -15,7 +15,7 @@
         .header-main h1 { color: var(--dark); margin: 0; font-size: 30px; font-weight: 800; }
         .header-main p { color: #64748b; margin: 8px 0 0 0; font-size: 15px; }
         
-        /* Premium Tabs */
+        /* Navigation Tabs */
         .nav-tabs { display: flex; gap: 8px; background: #e2e8f0; padding: 4px; border-radius: 8px; margin-bottom: 30px; }
         .tab-btn { flex: 1; background: none; border: none; font-size: 15px; font-weight: 600; cursor: pointer; padding: 10px; border-radius: 6px; color: #475569; transition: all 0.2s; }
         .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
@@ -23,17 +23,21 @@
         .panel { display: none; }
         .panel.active { display: block; }
         
-        /* Layouts */
-        .set-section { background: var(--light); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
-        .set-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-        .set-btn { background: white; border: 1px solid var(--border); padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; }
-        .set-btn.selected { border-color: var(--primary); color: var(--primary); background: #f5f3ff; }
-        
-        .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .mode-action-btn { background: white; border: 1px solid var(--border); padding: 16px; font-size: 15px; font-weight: 700; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .mode-action-btn:hover { border-color: var(--primary); background: #f5f3ff; }
-        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; justify-content: center; }
+        /* Main Category Grid */
+        .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .mode-action-btn { background: white; border: 1px solid var(--border); padding: 20px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; transition: all 0.2s; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .mode-action-btn:hover { border-color: var(--primary); background: #f5f3ff; transform: translateY(-2px); }
+        .mode-action-btn .badge { background: #e0e7ff; color: var(--primary); font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; align-items: center; justify-content: center; }
+        .mix-action-btn:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); color: white; }
 
+        /* Sets View Dashboard */
+        .set-section { background: var(--light); border: 1px solid var(--border); padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
+        .set-btn { background: white; border: 1px solid var(--border); padding: 14px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 4px; transition: all 0.15s; }
+        .set-btn:hover { border-color: var(--primary); background: #f5f3ff; }
+        .set-btn span.count { font-size: 12px; color: #64748b; font-weight: 500; }
+        
         /* Quiz Layout */
         .quiz-box { border: 1px solid var(--border); padding: 30px; border-radius: 14px; background: white; }
         .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
@@ -43,7 +47,7 @@
         .opt-row { background: var(--light); border: 1px solid var(--border); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; }
         .opt-row.selected { background: #eef2ff; border-color: var(--primary); color: var(--primary); font-weight: 700; }
         
-        /* Smart Nav Controls */
+        /* Controls */
         .nav-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
         .control-btn { padding: 12px 20px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; flex: 1; min-width: 120px; }
         .btn-submit-next { background: var(--primary); color: white; }
@@ -51,7 +55,7 @@
         .btn-review { background: var(--warning); color: white; }
         .btn-quit { background: #fff; border: 1px solid var(--danger); color: var(--danger); }
 
-        /* History Table & Mistake Tracker */
+        /* Reports Tracker */
         .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
         .history-table th, .history-table td { border: 1px solid var(--border); padding: 12px; text-align: left; }
         .history-table th { background: var(--light); font-weight: 700; }
@@ -62,10 +66,14 @@
         .review-item.wrong { border-left-color: var(--danger); }
         .review-item.skipped { border-left-color: #cbd5e1; }
         
-        /* Admin Workspace */
+        /* Admin Section Box */
         .workspace-card { border: 1px solid var(--border); border-radius: 12px; background: white; padding: 25px; margin-bottom: 25px; }
         .admin-input { width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 5px; }
         .graph-box { height: 320px; margin-bottom: 40px; }
+        .timer-badge { background: #f1f5f9; color: #475569; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .score-card-big { background: var(--light); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--border); max-width: 400px; margin: 0 auto 30px auto; }
+        .score-num { font-size: 54px; font-weight: 800; color: var(--primary); margin: 10px 0; }
+        .stat-badge-row { display: flex; justify-content: center; gap: 15px; font-weight: 700; font-size: 14px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -73,44 +81,64 @@
 <div class="platform-container">
     <div class="header-main">
         <h1>SSC MTS Elite Exam Dashboard</h1>
-        <p>Real Exam Pattern & Professional Mistake Tracker Tracker System</p>
+        <p>Real Exam Pattern & Subject-Wise Target Pack System (+3 / -1 Marking)</p>
     </div>
 
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchPanel('test')">🎯 Practice Mock Board</button>
-        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Advanced Analytics Graph</button>
+        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Subject-Wise Analytics Graph</button>
         <button class="tab-btn" onclick="switchPanel('history')">📜 Past Reports (Mistake Tracker)</button>
         <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Control Panel Workspace</button>
     </div>
 
     <!-- PANEL 1: TESTING SUITE -->
     <div id="panel-test" class="panel active">
-        <div id="menu-view">
-            <div class="set-section">
-                <div style="font-weight: 700;">📂 Available Lesson Sets</div>
-                <div class="set-grid" id="set-buttons-container"></div>
-            </div>
-
-            <div style="display: flex; gap: 20px; background: var(--light); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 25px; align-items: center;">
-                <label style="font-weight: 600; cursor: pointer; font-size: 14px;">
-                    <input type="checkbox" id="timer-toggle" checked> Enable Full Mock Timer
-                </label>
-                <div style="font-size: 14px;">
-                    <label style="font-weight: 600; color:#475569;">Duration (Minutes): </label>
-                    <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:60px; padding:6px; display:inline-block; margin:0;">
-                </div>
-            </div>
-
-            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 15px;">Launch Targeted Test Section:</h3>
+        <!-- Step 1: Category Screen -->
+        <div id="category-menu-view">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">Select Category Mode:</h3>
             <div class="btn-grid">
-                <button class="mode-action-btn" onclick="startQuiz('OWS')"><span>One Word (OWS)</span> <span>➔</span></button>
-                <button class="mode-action-btn" onclick="startQuiz('Synonym')"><span>Synonyms</span> <span>➔</span></button>
-                <button class="mode-action-btn" onclick="startQuiz('Antonym')"><span>Antonyms</span> <span>➔</span></button>
-                <button class="mode-action-btn" onclick="startQuiz('Idiom')"><span>Idioms & Phrases</span> <span>➔</span></button>
-                <button class="mode-action-btn mix-action-btn" onclick="startQuiz('MIX')">🚀 Launch Comprehensive MIX Mock Test</button>
+                <button class="mode-action-btn" onclick="openSubjectSets('OWS')">
+                    <span>One Word Substitution</span>
+                    <span class="badge" id="badge-count-OWS">1 Set Available</span>
+                </button>
+                <button class="mode-action-btn" onclick="openSubjectSets('Synonym')">
+                    <span>Synonyms (Paryayvachi)</span>
+                    <span class="badge" id="badge-count-Synonym">1 Set Available</span>
+                </button>
+                <button class="mode-action-btn" onclick="openSubjectSets('Antonym')">
+                    <span>Antonyms (Vilom Shabd)</span>
+                    <span class="badge" id="badge-count-Antonym">1 Set Available</span>
+                </button>
+                <button class="mode-action-btn" onclick="openSubjectSets('Idiom')">
+                    <span>Idioms & Phrases</span>
+                    <span class="badge" id="badge-count-Idiom">1 Set Available</span>
+                </button>
+                <button class="mode-action-btn mix-action-btn" onclick="openSubjectSets('MIX')">🚀 Launch Comprehensive MIX Mock Test Dashboard</button>
             </div>
         </div>
 
+        <!-- Step 2: Sets Selection Screen (Inside Subject) -->
+        <div id="sets-menu-view" style="display:none;">
+            <button class="control-btn btn-skip" style="flex:none; max-width:130px; padding:8px;" onclick="backToCategories()">← Change Category</button>
+            <div class="set-section" style="margin-top:15px;">
+                <h3 style="margin:0; font-size:18px;" id="set-view-title">Available Practice Sets:</h3>
+                
+                <!-- Timer Configuration Row (Shown right before starting set) -->
+                <div style="display: flex; gap: 20px; background: white; border: 1px solid var(--border); padding: 12px 15px; border-radius: 8px; margin-top: 15px; align-items: center; font-size: 14px;">
+                    <label style="font-weight: 600; cursor: pointer;">
+                        <input type="checkbox" id="timer-toggle" checked> Enable Full Mock Timer
+                    </label>
+                    <div>
+                        <label style="font-weight: 600; color:#475569;">Duration (Minutes): </label>
+                        <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:55px; padding:4px; display:inline-block; margin:0;">
+                    </div>
+                </div>
+
+                <div class="set-grid" id="set-buttons-list"></div>
+            </div>
+        </div>
+
+        <!-- Step 3: Real Quiz View Room -->
         <div id="quiz-view" style="display:none;"></div>
     </div>
 
@@ -123,13 +151,12 @@
     <!-- PANEL 3: HISTORY LOGS & MISTAKE REPORT -->
     <div id="panel-history" class="panel">
         <h2>📜 Past Mock Test Reports (Mistake Tracker)</h2>
-        <p style="color:#64748b; font-size:13px;">Yahan aap apne saare purane tests aur unme hui galtiyan poori details ke sath dekh sakte hain:</p>
         <div id="history-list-view">
             <table class="history-table">
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Set / Category</th>
+                        <th>Category Mode</th>
                         <th>Score Marks</th>
                         <th>Action</th>
                     </tr>
@@ -147,7 +174,7 @@
     <div id="panel-admin" class="panel">
         <div class="workspace-card" style="background: #faf5ff; border-color: #e9d5ff;">
             <h3 style="color: #6b21a8;">📥 Batch Import Automation Data</h3>
-            <p>Paste the dedicated structured code block generated by the AI to seamlessly spawn separate operational mock sets.</p>
+            <p>Paste the dedicated structured code block generated by the AI. It detects type automatically and packs it inside a clean Set.</p>
             <textarea id="import-code-area" rows="5" class="admin-input" style="font-family: monospace; font-size:13px;" placeholder="Paste the code block here..."></textarea>
             <button class="control-btn btn-submit-next" style="background:#8b5cf6; width:100%; margin-top:15px;" onclick="importBatchData()">Execute Batch Deployment</button>
         </div>
@@ -155,46 +182,71 @@
 </div>
 
 <script>
-    const defaultData = [
-        {
-            setName: "Set 1 (Starter Pack)",
-            OWS: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Manuscript"], e: "Epitaph = Samadhi lekh."}],
-            Synonym: [{q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Alert"], e: "Idle matlab aalsi."}],
-            Antonym: [{q: "What is the antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Vain", "Rude"], e: "Arrogant ka ulta Humble hota hai."}],
-            Idiom: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Daily", "Never"], e: "Once in a blue moon = Bohot kam ho jo."}]
-        }
-    ];
+    // Separated Structures based on User requirements
+    const initialDatabase = {
+        OWS: [{ setName: "Set 1 (Starter Pack)", items: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Manuscript"], e: "Epitaph = Samadhi lekh."}] }],
+        Synonym: [{ setName: "Set 1 (Starter Pack)", items: [{q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Alert"], e: "Idle matlab aalsi."}] }],
+        Antonym: [{ setName: "Set 1 (Starter Pack)", items: [{q: "What is the antonym of 'Arrogant'?", a: "Humble", o: ["Humble", "Proud", "Vain", "Rude"], e: "Arrogant ka ulta Humble hota hai."}] }],
+        Idiom: [{ setName: "Set 1 (Starter Pack)", items: [{q: "Meaning of idiom: 'Once in a blue moon'", a: "Very rarely", o: ["Very rarely", "Frequently", "Daily", "Never"], e: "Once in a blue moon = Bohot kam ho jo."}] }]
+    };
 
-    let sessionSets = JSON.parse(localStorage.getItem('mts_pro_sets')) || defaultData;
+    let globalDB = JSON.parse(localStorage.getItem('mts_final_db')) || initialDatabase;
     let analyticsData = JSON.parse(localStorage.getItem('mts_pro_metrics')) || [];
-    let currentActiveSetName = sessionSets[0].setName;
-    let chartInstance = null;
-
+    
+    let currentSelectedCategory = "";
     let testSuiteQuestions = [];
     let activeQIdx = 0;
     let selectedAnswerVal = null;
     let globalTimer = null;
     let totalSecondsLeft = 0;
-    let currentQuizCategory = "";
-    
-    // Tracking lists for user choices
-    let userSelectionsSnapshot = []; 
+    let userSelectionsSnapshot = [];
+    let chartInstance = null;
 
     function saveState() {
-        localStorage.setItem('mts_pro_sets', JSON.stringify(sessionSets));
+        localStorage.setItem('mts_final_db', JSON.stringify(globalDB));
         localStorage.setItem('mts_pro_metrics', JSON.stringify(analyticsData));
-        buildSetSelectors();
-        buildHistoryTable();
+        updateCategoryBadges();
     }
 
-    function buildSetSelectors() {
-        const container = document.getElementById('set-buttons-container');
-        container.innerHTML = sessionSets.map(s => `
-            <button class="set-btn ${currentActiveSetName === s.setName ? 'selected' : ''}" onclick="changeActiveSet('${s.setName}')">${s.setName}</button>
-        `).join('');
+    function updateCategoryBadges() {
+        document.getElementById('badge-count-OWS').innerText = `${globalDB.OWS.length} Sets Available`;
+        document.getElementById('badge-count-Synonym').innerText = `${globalDB.Synonym.length} Sets Available`;
+        document.getElementById('badge-count-Antonym').innerText = `${globalDB.Antonym.length} Sets Available`;
+        document.getElementById('badge-count-Idiom').innerText = `${globalDB.Idiom.length} Sets Available`;
     }
 
-    function changeActiveSet(name) { currentActiveSetName = name; buildSetSelectors(); }
+    function openSubjectSets(cat) {
+        currentSelectedCategory = cat;
+        document.getElementById('category-menu-view').style.display = 'none';
+        document.getElementById('sets-menu-view').style.display = 'block';
+        
+        const titleElement = document.getElementById('set-view-title');
+        const listContainer = document.getElementById('set-buttons-list');
+        
+        if(cat === 'MIX') {
+            titleElement.innerText = "Full Syllabus MIX Mock Options:";
+            listContainer.innerHTML = `
+                <button class="set-btn" onclick="startQuiz('ALL_SETS')">
+                    <strong>Launch Full Combined Mock</strong>
+                    <span class="count">Mixes items from all available sets</span>
+                </button>
+            `;
+        } else {
+            titleElement.innerText = `${cat} Mode Available Sets:`;
+            const setsArray = globalDB[cat] || [];
+            listContainer.innerHTML = setsArray.map((s, idx) => `
+                <button class="set-btn" onclick="startQuiz(${idx})">
+                    <strong>Set ${idx + 1}</strong>
+                    <span class="count">Contains ${s.items.length} Sawaal</span>
+                </button>
+            `).join('');
+        }
+    }
+
+    function backToCategories() {
+        document.getElementById('sets-menu-view').style.display = 'none';
+        document.getElementById('category-menu-view').style.display = 'block';
+    }
 
     function switchPanel(name) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -207,40 +259,37 @@
 
     function importBatchData() {
         const text = document.getElementById('import-code-area').value.trim();
-        if(!text) return alert("Paste code block first!");
+        if(!text) return alert("Code paste karein!");
         try {
             const parsed = JSON.parse(text);
-            if(parsed.questions && parsed.type) {
-                const newSetName = `Set ${sessionSets.length + 1} (${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short'})})`;
-                const containerObject = {
-                    setName: newSetName,
-                    OWS: parsed.type === 'OWS' ? parsed.questions : [],
-                    Synonym: parsed.type === 'Synonym' ? parsed.questions : [],
-                    Antonym: parsed.type === 'Antonym' ? parsed.questions : [],
-                    Idiom: parsed.type === 'Idiom' ? parsed.questions : []
-                };
-                sessionSets.push(containerObject);
-                currentActiveSetName = newSetName;
+            if(parsed.questions && parsed.type && globalDB[parsed.type]) {
+                const setIndexNum = globalDB[parsed.type].length + 1;
+                globalDB[parsed.type].push({
+                    setName: `Set ${setIndexNum} Pack`,
+                    items: parsed.questions
+                });
                 saveState();
-                alert(`Batch executed successfully! Created "${newSetName}".`);
+                alert(`Zabardast! Aapka data detect ho gaya aur wo "${parsed.type}" ke "Set ${setIndexNum}" me save ho gaya hai!`);
                 document.getElementById('import-code-area').value = "";
                 switchPanel('test');
-            }
-        } catch(e) { alert("Parsing error! Validate data integrity."); }
+                backToCategories();
+            } else { alert("Type system parameters match failed!"); }
+        } catch(e) { alert("Parsing error! Code block check karein."); }
     }
 
-    function startQuiz(cat) {
-        currentQuizCategory = cat;
-        const targetSet = sessionSets.find(s => s.setName === currentActiveSetName);
-        testSuiteQuestions = cat === 'MIX' ? [...targetSet.OWS, ...targetSet.Synonym, ...targetSet.Antonym, ...targetSet.Idiom] : targetSet[cat] || [];
+    function startQuiz(setSelector) {
+        if(currentSelectedCategory === 'MIX') {
+            testSuiteQuestions = [...globalDB.OWS, ...globalDB.Synonym, ...globalDB.Antonym, ...globalDB.Idiom].flatMap(s => s.items || []);
+        } else {
+            testSuiteQuestions = globalDB[currentSelectedCategory][setSelector].items || [];
+        }
 
-        if(testSuiteQuestions.length === 0) return alert("No questions available in this current section pack.");
+        if(testSuiteQuestions.length === 0) return alert("Is Set me koi questions nahi mile!");
 
         testSuiteQuestions.sort(() => 0.5 - Math.random());
-        activeQIdx = 0;
-        userSelectionsSnapshot = [];
+        activeQIdx = 0; userSelectionsSnapshot = [];
 
-        document.getElementById('menu-view').style.display = 'none';
+        document.getElementById('sets-menu-view').style.display = 'none';
         document.getElementById('quiz-view').style.display = 'block';
 
         const useTimer = document.getElementById('timer-toggle').checked;
@@ -273,9 +322,9 @@
         container.innerHTML = `
             <div class="quiz-box">
                 <div class="quiz-top-bar">
-                    <span style="font-weight:700;">Scope: ${currentActiveSetName} (${currentQuizCategory})</span>
-                    ${timerFlag ? `<div class="timer-panel">⏱️ Time Left: <span id="timer-clock-display"></span></div>` : '<span>Continuous</span>'}
-                    <span style="font-weight:600;">Item ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
+                    <span style="font-weight:700;">Mode: ${currentSelectedCategory} Suite</span>
+                    ${timerFlag ? `<div class="timer-panel">⏱️ Total Time Left: <span id="timer-clock-display"></span></div>` : '<span>Continuous</span>'}
+                    <span style="font-weight:600;">Question ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
                 </div>
                 <div class="question-text">${currentData.q}</div>
                 <div class="options-stack">
@@ -283,8 +332,8 @@
                 </div>
                 <div class="nav-controls">
                     <button class="control-btn btn-quit" onclick="forceQuitSession()">Quit Test</button>
-                    <button class="control-btn btn-skip" onclick="handleQuestionAction('SKIP')">Skip Question</button>
-                    <button class="control-btn btn-review" onclick="handleQuestionAction('REVIEW')">Mark for Review</button>
+                    <button class="control-btn btn-skip" onclick="handleQuestionAction('SKIP')">Skip</button>
+                    <button class="control-btn btn-review" onclick="handleQuestionAction('REVIEW')">Review Tag</button>
                     <button class="control-btn btn-submit-next" id="next-act-btn" disabled onclick="handleQuestionAction('SUBMIT')">Submit & Next</button>
                 </div>
             </div>
@@ -301,18 +350,11 @@
     function handleQuestionAction(type) {
         const correct = testSuiteQuestions[activeQIdx].a;
         if(type === 'SUBMIT') {
-            userSelectionsSnapshot.push({
-                status: selectedAnswerVal === correct ? 'CORRECT' : 'WRONG',
-                selected: selectedAnswerVal
-            });
+            userSelectionsSnapshot.push({ status: selectedAnswerVal === correct ? 'CORRECT' : 'WRONG', selected: selectedAnswerVal });
         } else if(type === 'SKIP') {
             userSelectionsSnapshot.push({ status: 'SKIPPED', selected: 'Skipped' });
         } else if(type === 'REVIEW') {
-            userSelectionsSnapshot.push({
-                status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED',
-                selected: selectedAnswerVal || 'Marked Review (No Answer)',
-                isReview: true
-            });
+            userSelectionsSnapshot.push({ status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED', selected: selectedAnswerVal || 'Marked Review', isReview: true });
         }
 
         activeQIdx++;
@@ -325,9 +367,10 @@
     }
 
     function forceQuitSession() {
-        if(confirm("Exit mock dashboard? Current progress will be lost.")) {
+        if(confirm("Exit current quiz board? Data entry loss warning.")) {
             clearInterval(globalTimer);
-            closeQuizBoardView();
+            document.getElementById('quiz-view').style.display = 'none';
+            backToCategories();
         }
     }
 
@@ -342,19 +385,12 @@
         const totalAwardedPoints = (correct * 3) - (wrong * 1);
         const logStamp = new Date().toLocaleString('en-IN', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
         
-        // Detailed log item for reports
         const newLog = {
-            id: Date.now(),
-            date: logStamp,
-            set: currentActiveSetName,
-            category: currentQuizCategory,
-            points: totalAwardedPoints,
-            stats: { correct, wrong, skipped },
-            questionsDump: JSON.parse(JSON.stringify(testSuiteQuestions)),
-            answersDump: JSON.parse(JSON.stringify(userSelectionsSnapshot))
+            id: Date.now(), date: logStamp, category: currentSelectedCategory, points: totalAwardedPoints,
+            stats: { correct, wrong, skipped }, questionsDump: JSON.parse(JSON.stringify(testSuiteQuestions)), answersDump: JSON.parse(JSON.stringify(userSelectionsSnapshot))
         };
 
-        analyticsData.push({ date: logStamp.split(',')[0], set: currentActiveSetName, category: currentQuizCategory, points: totalAwardedPoints });
+        analyticsData.push({ date: logStamp.split(',')[0], category: currentSelectedCategory, points: totalAwardedPoints });
         localStorage.setItem('mts_pro_metrics', JSON.stringify(analyticsData));
 
         let historyLogsExtended = JSON.parse(localStorage.getItem('mts_pro_history_logs_ext')) || [];
@@ -364,39 +400,35 @@
         document.getElementById('quiz-view').innerHTML = `
             <div class="quiz-box" style="text-align:center;">
                 <h2>Exam Statistics Report</h2>
-                <div class="score-card-big">
-                    <div>Final Awarded Marks</div>
-                    <div class="score-num">${totalAwardedPoints}</div>
-                </div>
+                <div class="score-card-big"><div class="score-num">${totalAwardedPoints}</div>Marks</div>
                 <div class="stat-badge-row">
-                    <span style="color:var(--success)">✅ Correct: ${correct} (+3)</span> | 
-                    <span style="color:var(--danger)">❌ Wrong: ${wrong} (-1)</span> | 
-                    <span style="color:#64748b;">⏳ Skipped: ${skipped}</span>
+                    <span style="color:var(--success)">✅ Correct: ${correct}</span> | 
+                    <span style="color:var(--danger)">❌ Wrong: ${wrong}</span> | 
+                    <span>⏳ Skipped: ${skipped}</span>
                 </div>
-                <p style="margin-top:15px; font-size:13px; color:#64748b;">Aapki poori Mistake Sheet 'Past Reports' tab me save ho gayi hai.</p>
-                <button class="control-btn btn-submit-next" style="margin-top:20px; max-width:250px;" onclick="closeQuizBoardView()">Return to Grid</button>
+                <button class="control-btn btn-submit-next" style="margin-top:20px; max-width:250px;" onclick="closeQuizBoardView()">Close Dashboard</button>
             </div>
         `;
     }
 
     function closeQuizBoardView() {
         document.getElementById('quiz-view').style.display = 'none';
-        document.getElementById('menu-view').style.display = 'block';
+        backToCategories();
     }
 
     function buildHistoryTable() {
         const logs = JSON.parse(localStorage.getItem('mts_pro_history_logs_ext')) || [];
         const tbody = document.getElementById('history-table-body');
         if(logs.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Koi test record nahi mila. Pehle koi mock test dein!</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No history markers found yet.</td></tr>`;
             return;
         }
         tbody.innerHTML = logs.reverse().map(l => `
             <tr>
                 <td>${l.date}</td>
-                <td><strong>${l.set}</strong> <span class="timer-badge" style="background:#eef2ff; color:var(--primary); font-size:11px;">${l.category}</span></td>
+                <td><span class="timer-badge" style="background:#eef2ff; color:var(--primary);">${l.category} Set Mode</span></td>
                 <td style="font-weight:bold; color:${l.points >= 0 ? 'var(--success)' : 'var(--danger)'}">${l.points} Marks</td>
-                <td><button class="view-report-btn" onclick="openReportDetail(${l.id})">View Galti Tracker</button></td>
+                <td><button class="view-report-btn" onclick="openReportDetail(${l.id})">View Report</button></td>
             </tr>
         `).join('');
     }
@@ -410,33 +442,20 @@
         const detailContainer = document.getElementById('report-detail-container');
         document.getElementById('history-detail-view').style.display = 'block';
 
-        let html = `<h3>Galti Tracker Report: ${match.set} (${match.category})</h3>`;
-        html += `<div class="stat-badge-row" style="justify-content:flex-start; margin-bottom:20px;">
-            <span>Score: <strong>${match.points} Marks</strong></span> | 
-            <span style="color:var(--success)">Correct: ${match.stats.correct}</span> | 
-            <span style="color:var(--danger)">Wrong: ${match.stats.wrong}</span> | 
-            <span>Skipped: ${match.stats.skipped}</span>
-        </div>`;
-
+        let html = `<h3>Galti Tracker Matrix Sheet - Category (${match.category})</h3>`;
         match.questionsDump.forEach((q, idx) => {
             const userAns = match.answersDump[idx];
-            let itemClass = "skipped";
-            if(userAns.status === 'CORRECT') itemClass = "correct";
-            if(userAns.status === 'WRONG') itemClass = "wrong";
-
+            let itemClass = userAns.status === 'CORRECT' ? 'correct' : (userAns.status === 'WRONG' ? 'wrong' : 'skipped');
             html += `
                 <div class="review-item ${itemClass}">
                     <strong>Q${idx + 1}: ${q.q}</strong><br>
-                    <div style="margin-top:8px; font-size:13px;">
-                        Aapka Answer: <span style="font-weight:700;">${userAns.selected}</span> 
-                        ${userAns.isReview ? ' <span style="color:var(--warning)">(Marked For Review)</span>' : ''}<br>
-                        Correct Answer: <span style="color:var(--success); font-weight:700;">${q.a}</span>
+                    <div style="margin-top:6px; font-size:13px;">
+                        Aapka Selection: <strong>${userAns.selected}</strong> | Sahi Answer: <span style="color:var(--success); font-weight:bold;">${q.a}</span>
                     </div>
-                    <div style="font-style:italic; font-size:12px; color:#64748b; margin-top:8px;">💡 <strong>Explanation:</strong> ${q.e || 'Direct parameter vocabulary checking.'}</div>
+                    <div style="font-size:12px; margin-top:5px; color:#64748b;">💡 Explanation: ${q.e || 'Vocabulary memory metrics parameters.'}</div>
                 </div>
             `;
         });
-
         detailContainer.innerHTML = html;
     }
 
@@ -449,11 +468,11 @@
         const ctx = document.getElementById('analyticsChart').getContext('2d');
         if(chartInstance) chartInstance.destroy();
 
-        let uniqueTimeline = [...new Set(analyticsData.map(d => `${d.date} [${d.set.split(' ')[0] || ''}]`))];
-        if(uniqueTimeline.length === 0) uniqueTimeline = ["T1", "T2"];
+        let uniqueTimeline = [...new Set(analyticsData.map(d => d.date))];
+        if(uniqueTimeline.length === 0) uniqueTimeline = ["Pack A", "Pack B"];
 
         const filterPoints = (cat) => uniqueTimeline.map(t => {
-            const match = analyticsData.find(d => `${d.date} [${d.set.split(' ')[0] || ''}]` === t && d.category === cat);
+            const match = analyticsData.find(d => d.date === t && d.category === cat);
             return match ? match.points : null;
         });
 
@@ -465,7 +484,7 @@
                     { label: 'One Word (OWS)', data: filterPoints('OWS'), borderColor: '#3b82f6', tension: 0.2, spanGaps: true },
                     { label: 'Synonyms', data: filterPoints('Synonym'), borderColor: '#10b981', tension: 0.2, spanGaps: true },
                     { label: 'Antonyms', data: filterPoints('Antonym'), borderColor: '#ef4444', tension: 0.2, spanGaps: true },
-                    { label: 'Idioms', data: filterPoints('f59e0b'), borderColor: '#f59e0b', tension: 0.2, spanGaps: true },
+                    { label: 'Idioms', data: filterPoints('Idiom'), borderColor: '#f59e0b', tension: 0.2, spanGaps: true },
                     { label: 'MIX Full Mock', data: filterPoints('MIX'), borderColor: '#8b5cf6', tension: 0.2, spanGaps: true }
                 ]
             },
@@ -473,7 +492,8 @@
         });
     }
 
-    buildSetSelectors();
+    // Initialize
+    updateCategoryBadges();
 </script>
 </body>
 </html>
