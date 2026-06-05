@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spider-Vocab: SSC MTS Elite Dashboard</title>
+    <title>Spider-Vocab: Ultimate SSC MTS Mock Board</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { 
-            --spidey-red: #e63946; 
-            --spidey-red-hover: #b71c1c;
-            --spidey-blue: #1d3557; 
-            --electric-blue: #00b4d8;
-            --dark-suit: #111827; 
-            --web-gray: #f8fafc; 
-            --border-line: #cbd5e1;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --spidey-red: #ff002b; 
+            --spidey-red-dark: #b7001c;
+            --spidey-blue: #0b1a30; 
+            --electric-blue: #00f0ff;
+            --dark-suit: #070b12; 
+            --card-bg: #131c2e;
+            --border-line: rgba(255, 0, 43, 0.3);
+            --success: #00ff88;
+            --danger: #ff3333;
+            --warning: #ffaa00;
         }
         
         body { 
             font-family: 'Inter', system-ui, -apple-system, sans-serif; 
             background-color: var(--dark-suit); 
-            background-image: radial-gradient(rgba(230, 57, 70, 0.1) 1px, transparent 0);
-            background-size: 24px 24px;
+            /* Spider Web Background Pattern Effect */
+            background-image: 
+                radial-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 0),
+                linear-gradient(to right, rgba(255, 0, 43, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 0, 43, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px, 60px 60px, 60px 60px;
             margin: 0; 
             padding: 20px; 
             display: flex; 
@@ -32,125 +36,176 @@
         }
         
         .platform-container { 
-            background: #1e293b; 
+            background: var(--card-bg); 
             width: 100%; 
             max-width: 950px; 
             padding: 35px; 
-            border-radius: 16px; 
-            border: 2px solid var(--spidey-red);
-            box-shadow: 0 0 20px rgba(230, 57, 70, 0.3); 
+            border-radius: 20px; 
+            border: 3px solid var(--spidey-red);
+            box-shadow: 0 0 30px rgba(255, 0, 43, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.1); 
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Spider-Man Logo & Graphic Corner Background */
+        .spidey-graphic-bg {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
+            background: url('https://img.icons8.com/isometric/512/spider-man.png') no-repeat center/contain;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
         }
         
-        /* Header Styling (Spider-Man Vibe) */
+        /* Premium Header with Logo Image */
         .header-main { 
             text-align: center; 
             margin-bottom: 30px; 
-            border-bottom: 2px dashed var(--spidey-red); 
-            padding-bottom: 20px; 
+            border-bottom: 3px dashed var(--spidey-red); 
+            padding-bottom: 25px; 
+            position: relative;
+            z-index: 1;
+        }
+        .spidey-logo-img {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 12px var(--spidey-red));
+            animation: webSwing 3s ease-in-out infinite alternative;
+            transform-origin: top center;
         }
         .header-main h1 { 
             color: var(--spidey-red); 
             margin: 0; 
-            font-size: 32px; 
+            font-size: 34px; 
             font-weight: 900; 
-            text-shadow: 2px 2px 0px #000, 0 0 10px rgba(0, 180, 216, 0.6);
-            letter-spacing: -0.025em; 
+            text-shadow: 0 0 10px rgba(255, 0, 43, 0.6), 2px 2px 0px #000;
+            letter-spacing: -0.01em; 
         }
         .header-main p { 
             color: var(--electric-blue); 
             margin: 8px 0 0 0; 
             font-size: 15px; 
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        /* Premium Tabs */
-        .nav-tabs { display: flex; gap: 8px; background: #0f172a; padding: 6px; border-radius: 8px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        .tab-btn { flex: 1; background: none; border: none; font-size: 14px; font-weight: 700; cursor: pointer; padding: 12px; border-radius: 6px; color: #94a3b8; transition: all 0.2s; }
-        .tab-btn.active { background: var(--spidey-red); color: white; box-shadow: 0 0 12px rgba(230, 57, 70, 0.6); }
+        /* Navigation Tabs */
+        .nav-tabs { display: flex; gap: 8px; background: #080f1d; padding: 6px; border-radius: 10px; margin-bottom: 30px; border: 1px solid var(--border-line); }
+        .tab-btn { flex: 1; background: none; border: none; font-size: 14px; font-weight: 700; cursor: pointer; padding: 12px; border-radius: 8px; color: #94a3b8; transition: all 0.2s; }
+        .tab-btn.active { background: var(--spidey-red); color: white; box-shadow: 0 0 15px rgba(255, 0, 43, 0.7); text-shadow: 1px 1px 2px #000; }
         
-        .panel { display: none; }
+        .panel { display: none; position: relative; z-index: 1; }
         .panel.active { display: block; }
         
-        /* Category Grid */
+        /* Category Action Buttons Grid */
         .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-        .mode-action-btn { background: #334155; border: 1px solid rgba(255,255,255,0.1); padding: 20px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: white; transition: all 0.2s; }
-        .mode-action-btn:hover { border-color: var(--electric-blue); background: var(--spidey-blue); transform: translateY(-2px); box-shadow: 0 0 15px rgba(0, 180, 216, 0.4); }
-        .mode-action-btn .badge { background: var(--spidey-red); color: white; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
-        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, var(--spidey-red), #991b1b); border: none; align-items: center; justify-content: center; }
-        .mix-action-btn:hover { background: linear-gradient(135deg, #b71c1c, var(--spidey-red)); box-shadow: 0 0 15px rgba(230, 57, 70, 0.6); }
+        .mode-action-btn { background: #1a263f; border: 1px solid rgba(255,255,255,0.08); padding: 22px; font-size: 16px; font-weight: 700; border-radius: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: white; transition: all 0.2s; border-left: 4px solid var(--electric-blue); }
+        .mode-action-btn:hover { border-color: var(--electric-blue); background: var(--spidey-blue); transform: translateY(-3px); box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); }
+        .mode-action-btn .badge { background: var(--spidey-red); color: white; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; box-shadow: 0 0 8px var(--spidey-red); }
+        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, var(--spidey-red), #800015); border: none; align-items: center; justify-content: center; font-size: 17px; }
+        .mix-action-btn:hover { background: linear-gradient(135deg, #ff1a43, var(--spidey-red)); box-shadow: 0 0 20px rgba(255, 0, 43, 0.8); }
 
-        /* Sets Screen */
-        .set-section { background: #334155; border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+        /* Sets Configuration */
+        .set-section { background: #1a263f; border: 1px solid rgba(255,255,255,0.08); padding: 25px; border-radius: 14px; margin-bottom: 25px; }
         .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
-        .set-btn { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 14px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; color: white; text-align: left; display: flex; flex-direction: column; gap: 4px; transition: all 0.15s; }
-        .set-btn:hover { border-color: var(--spidey-red); background: #1e1b4b; }
+        .set-btn { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); padding: 14px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; color: white; text-align: left; display: flex; flex-direction: column; gap: 4px; transition: all 0.15s; }
+        .set-btn:hover { border-color: var(--spidey-red); background: #26162d; box-shadow: 0 0 10px rgba(255,0,43,0.2); }
         .set-btn span.count { font-size: 12px; color: #94a3b8; font-weight: 500; }
         
-        /* Quiz Box Styling */
-        .quiz-box { border: 2px solid var(--spidey-blue); padding: 30px; border-radius: 14px; background: #0f172a; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
-        .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; color: #94a3b8; font-weight: 600; }
-        .timer-panel { background: #fee2e2; color: #991b1b; padding: 8px 14px; border-radius: 6px; font-weight: 800; border: 1px solid var(--spidey-red); }
-        .question-text { font-size: 20px; font-weight: 700; margin-bottom: 25px; color: white; line-height: 1.5; }
+        /* Quiz Box Core Area */
+        .quiz-box { border: 2px solid var(--spidey-red); padding: 30px; border-radius: 16px; background: #080f1d; box-shadow: inset 0 0 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,0,43,0.1); }
+        .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; color: #94a3b8; font-weight: 600; font-size: 14px; }
+        .timer-panel { background: #3b000a; color: #ffb3b3; padding: 8px 14px; border-radius: 8px; font-weight: 800; border: 1px solid var(--spidey-red); box-shadow: 0 0 10px rgba(255,0,43,0.3); }
+        .question-text { font-size: 21px; font-weight: 700; margin-bottom: 25px; color: white; line-height: 1.5; }
         .options-stack { display: flex; flex-direction: column; gap: 12px; }
         
-        /* Spidey Options Rows */
-        .opt-row { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; color: #e2e8f0; font-weight: 500; transition: all 0.15s; }
-        .opt-row:hover { background: #334155; border-color: var(--electric-blue); }
-        .opt-row.selected { background: var(--spidey-blue); border-color: var(--electric-blue); color: var(--electric-blue); font-weight: 700; box-shadow: 0 0 10px rgba(0,180,216,0.3); }
+        .opt-row { background: #1a263f; border: 1px solid rgba(255,255,255,0.06); padding: 15px 20px; text-align: left; border-radius: 10px; cursor: pointer; font-size: 15px; color: #e2e8f0; font-weight: 500; transition: all 0.15s; }
+        .opt-row:hover { background: #243557; border-color: var(--electric-blue); }
+        .opt-row.selected { background: var(--spidey-blue); border-color: var(--electric-blue); color: var(--electric-blue); font-weight: 700; box-shadow: 0 0 12px rgba(0,240,255,0.4); }
         
-        /* Nav Controls Panel */
+        /* Controls Button Mechanics */
         .nav-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .control-btn { padding: 12px 20px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; flex: 1; min-width: 110px; transition: all 0.2s; }
+        .control-btn { padding: 13px 22px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; flex: 1; min-width: 110px; transition: all 0.2s; }
         .btn-submit-next { background: var(--spidey-red); color: white; }
-        .btn-submit-next:hover { background: var(--spidey-red-hover); }
-        .btn-submit-next:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
-        .btn-back { background: #334155; color: white; border: 1px solid rgba(255,255,255,0.2); }
-        .btn-back:hover { background: #475569; }
-        .btn-skip { background: #475569; color: white; }
+        .btn-submit-next:hover { background: var(--spidey-red-dark); box-shadow: 0 0 12px rgba(255,0,43,0.5); }
+        .btn-submit-next:disabled { background: #2d3748; color: #718096; cursor: not-allowed; box-shadow: none; }
+        .btn-back { background: #1a263f; color: white; border: 1px solid rgba(255,255,255,0.15); }
+        .btn-back:hover { background: #243557; }
+        .btn-skip { background: #4a5568; color: white; }
         .btn-review { background: var(--warning); color: white; }
         .btn-quit { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-        .btn-quit:hover { background: rgba(239, 68, 68, 0.1); }
+        .btn-quit:hover { background: rgba(255, 51, 51, 0.1); }
 
-        /* Past Reports History Layout */
+        /* Professional Galti Tracker - Red & Green Glow Design System */
         .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; color: white; }
-        .history-table th, .history-table td { border: 1px solid rgba(255,255,255,0.1); padding: 12px; text-align: left; }
-        .history-table th { background: #0f172a; font-weight: 700; color: var(--electric-blue); }
-        .history-table tr:nth-child(even) { background: #1e293b; }
-        .view-report-btn { background: var(--electric-blue); color: var(--dark-suit); border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .history-table th, .history-table td { border: 1px solid rgba(255,255,255,0.08); padding: 12px; text-align: left; }
+        .history-table th { background: #080f1d; color: var(--electric-blue); }
+        .history-table tr:nth-child(even) { background: #162238; }
+        .view-report-btn { background: var(--electric-blue); color: var(--dark-suit); border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; box-shadow: 0 0 8px var(--electric-blue); }
         
-        .review-item { background: #1e293b; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); border-left: 5px solid #cbd5e1; }
-        .review-item.correct { border-left-color: var(--success); }
-        .review-item.wrong { border-left-color: var(--danger); }
-        .review-item.skipped { border-left-color: #64748b; }
+        /* Review Galti Box items */
+        .review-item { background: #162238; padding: 20px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); position: relative; }
         
-        /* Control Admin Workspace */
-        .workspace-card { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: #0f172a; padding: 25px; margin-bottom: 25px; }
-        .admin-input { width: 100%; box-sizing: border-box; padding: 12px 14px; background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 14px; margin-top: 5px; color: white; }
-        .admin-input:focus { border-color: var(--electric-blue); outline: none; }
-        .graph-box { height: 320px; margin-bottom: 40px; background: #0f172a; padding: 15px; border-radius: 12px; }
-        .score-card-big { background: #0f172a; padding: 30px; border-radius: 12px; text-align: center; border: 2px solid var(--spidey-red); max-width: 400px; margin: 0 auto 30px auto; box-shadow: 0 0 15px rgba(230,57,70,0.4); }
-        .score-num { font-size: 54px; font-weight: 800; color: var(--electric-blue); margin: 10px 0; }
-        .stat-badge-row { display: flex; justify-content: center; gap: 15px; font-weight: 700; font-size: 14px; margin-top: 10px; }
+        /* EXPLICIT MISTAKE MARKERS REQUIRED BY USER */
+        .review-item.correct { 
+            border-left: 6px solid var(--success); 
+            box-shadow: inset 5px 0 15px rgba(0, 255, 136, 0.05);
+        }
+        .review-item.wrong { 
+            border-left: 6px solid var(--danger); 
+            background: #2d1217; /* Danger Matte Red Background Box */
+            border-color: rgba(255, 51, 51, 0.2);
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.15), inset 5px 0 15px rgba(255, 51, 51, 0.1);
+        }
+        .review-item.skipped { 
+            border-left: 6px solid #4a5568; 
+        }
+        
+        /* Workspace */
+        .workspace-card { border: 1px solid var(--border-line); border-radius: 12px; background: #080f1d; padding: 25px; margin-bottom: 25px; }
+        .admin-input { width: 100%; box-sizing: border-box; padding: 12px 14px; background: #162238; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 14px; margin-top: 5px; color: white; }
+        .admin-input:focus { border-color: var(--electric-blue); outline: none; box-shadow: 0 0 8px rgba(0,240,255,0.3); }
+        .graph-box { height: 260px; position: relative; }
+        .charts-container-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 20px; }
+        .graph-card-wrapper { background: #080f1d; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); }
+        .graph-card-wrapper h3 { margin: 0 0 15px 0; font-size: 15px; color: var(--electric-blue); border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; }
+        
+        .score-card-big { background: #080f1d; padding: 30px; border-radius: 12px; text-align: center; border: 2px solid var(--spidey-red); max-width: 400px; margin: 0 auto 30px auto; box-shadow: 0 0 20px rgba(255,0,43,0.5); }
+        .score-num { font-size: 54px; font-weight: 800; color: var(--electric-blue); margin: 10px 0; text-shadow: 0 0 8px var(--electric-blue); }
+
+        /* Animation */
+        @keyframes webSwing {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
     </style>
 </head>
 <body>
 
 <div class="platform-container">
+    <div class="spidey-graphic-bg"></div>
+    
     <div class="header-main">
+        <!-- Spider-man Custom High Quality Vector Art Logo Asset -->
+        <img src="https://img.icons8.com/color/512/spider-man-new-triangles.png" class="spidey-logo-img" alt="Spidey Logo">
         <h1>SPIDER-VOCAB MOCK BOARD</h1>
         <p>With Great Power Comes Great Preparation • Real Marking System (+3 / -1)</p>
     </div>
 
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchPanel('test')">🎯 Practice Mock Board</button>
-        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Analytics Graph</button>
+        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Multi-Graph Analytics</button>
         <button class="tab-btn" onclick="switchPanel('history')">📜 Past Reports (Galti Tracker)</button>
         <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Web-Slinger Control Panel</button>
     </div>
 
     <!-- PANEL 1: TESTING SUITE -->
     <div id="panel-test" class="panel active">
-        <!-- Step 1: Category Screen -->
         <div id="category-menu-view">
             <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--electric-blue);">Select Category Mode:</h3>
             <div class="btn-grid">
@@ -174,38 +229,54 @@
             </div>
         </div>
 
-        <!-- Step 2: Sets Selection Screen -->
         <div id="sets-menu-view" style="display:none;">
             <button class="control-btn btn-back" style="flex:none; max-width:150px;" onclick="backToCategories()">← Change Category</button>
             <div class="set-section" style="margin-top:15px;">
                 <h3 style="margin:0; font-size:18px; color: var(--electric-blue);" id="set-view-title">Available Practice Sets:</h3>
                 
-                <!-- Timer Row -->
-                <div style="display: flex; gap: 20px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; align-items: center; font-size: 14px;">
+                <div style="display: flex; gap: 20px; background: #080f1d; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; align-items: center; font-size: 14px;">
                     <label style="font-weight: 600; cursor: pointer; color: white;">
                         <input type="checkbox" id="timer-toggle" checked> Enable Full Mock Timer
                     </label>
                     <div>
                         <label style="font-weight: 600; color:#94a3b8;">Duration (Minutes): </label>
-                        <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:55px; padding:6px; display:inline-block; margin:0; background:#334155;">
+                        <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:55px; padding:6px; display:inline-block; margin:0; background:#162238;">
                     </div>
                 </div>
-
                 <div class="set-grid" id="set-buttons-list"></div>
             </div>
         </div>
-
-        <!-- Step 3: Real Quiz View Room -->
         <div id="quiz-view" style="display:none;"></div>
     </div>
 
-    <!-- PANEL 2: ANALYTICS -->
+    <!-- PANEL 2: INTELLIGENT MULTI-GRAPH SYSTEM -->
     <div id="panel-analytics" class="panel">
-        <h2 style="font-size:18px; font-weight:700; margin-bottom:10px; color: var(--electric-blue);">Subject-Wise Performance Breakdown</h2>
-        <div class="graph-box"><canvas id="analyticsChart"></canvas></div>
+        <h2 style="font-size:18px; font-weight:700; margin-bottom:10px; color: var(--electric-blue);">Subject-Wise Target Progress Room</h2>
+        <div class="charts-container-grid">
+            <div class="graph-card-wrapper">
+                <h3>🕸️ 1. OVERALL COMBINED MOCK TRACKER (SAAB MIX)</h3>
+                <div class="graph-box" style="height:340px;"><canvas id="mainMixChart"></canvas></div>
+            </div>
+            <div class="graph-card-wrapper">
+                <h3>🟦 2. ONE WORD SUBSTITUTION (OWS) PROGRESS</h3>
+                <div class="graph-box"><canvas id="owsChart"></canvas></div>
+            </div>
+            <div class="graph-card-wrapper">
+                <h3>🟩 3. SYNONYMS PERFORMANCE TRACK</h3>
+                <div class="graph-box"><canvas id="synChart"></canvas></div>
+            </div>
+            <div class="graph-card-wrapper">
+                <h3>🟥 4. ANTONYMS EVOLUTION TRACK</h3>
+                <div class="graph-box"><canvas id="antChart"></canvas></div>
+            </div>
+            <div class="graph-card-wrapper">
+                <h3>🟨 5. IDIOMS & PHRASES RESULTS METRIC</h3>
+                <div class="graph-box"><canvas id="idiomChart"></canvas></div>
+            </div>
+        </div>
     </div>
 
-    <!-- PANEL 3: HISTORY LOGS & MISTAKE REPORT -->
+    <!-- PANEL 3: HISTORY LOGS & DETAILED MISTAKE TRACKER -->
     <div id="panel-history" class="panel">
         <h2 style="color: var(--electric-blue);">📜 Past Mock Test Reports (Galti Tracker)</h2>
         <div id="history-list-view">
@@ -256,7 +327,7 @@
     let globalTimer = null;
     let totalSecondsLeft = 0;
     let userSelectionsSnapshot = [];
-    let chartInstance = null;
+    let instantiatedCharts = {};
 
     function saveState() {
         localStorage.setItem('mts_final_db', JSON.stringify(globalDB));
@@ -309,7 +380,7 @@
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.querySelector(`[onclick="switchPanel('${name}')"]`).classList.add('active');
         document.getElementById(`panel-${name}`).classList.add('active');
-        if(name === 'analytics') renderAnalyticsChart();
+        if(name === 'analytics') triggerMultiChartRenderPipeline();
         if(name === 'history') buildHistoryTable();
     }
 
@@ -373,7 +444,7 @@
 
     function renderQuizQuestion(timerFlag) {
         selectedAnswerVal = userSelectionsSnapshot[activeQIdx]?.selected;
-        if(selectedAnswerVal === 'Skipped' || selectedAnswerVal === 'Marked Review') selectedAnswerVal = null;
+        if(selectedAnswerVal === 'Skipped' || selectedAnswerVal === 'Marked Review' || selectedAnswerVal === 'Marked Review (No Answer)') selectedAnswerVal = null;
         
         const currentData = testSuiteQuestions[activeQIdx];
         const container = document.getElementById('quiz-view');
@@ -425,10 +496,9 @@
         } else if(type === 'SKIP') {
             answerObj = { status: 'SKIPPED', selected: 'Skipped' };
         } else if(type === 'REVIEW') {
-            answerObj = { status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED', selected: selectedAnswerVal || 'Marked Review', isReview: true };
+            answerObj = { status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED', selected: selectedAnswerVal || 'Marked Review (No Answer)', isReview: true };
         }
 
-        // Save or update selection at current index
         userSelectionsSnapshot[activeQIdx] = answerObj;
 
         activeQIdx++;
@@ -450,7 +520,6 @@
 
     function terminateMockSession() {
         let correct = 0, wrong = 0, skipped = 0;
-        // Backfill empty slots if ended prematurely
         for(let i=0; i<testSuiteQuestions.length; i++){
             if(!userSelectionsSnapshot[i]) userSelectionsSnapshot[i] = { status: 'SKIPPED', selected: 'Skipped' };
         }
@@ -525,13 +594,18 @@
         match.questionsDump.forEach((q, idx) => {
             const userAns = match.answersDump[idx];
             let itemClass = userAns.status === 'CORRECT' ? 'correct' : (userAns.status === 'WRONG' ? 'wrong' : 'skipped');
+            
             html += `
                 <div class="review-item ${itemClass}">
-                    <strong style="color:white;">Q${idx + 1}: ${q.q}</strong><br>
-                    <div style="margin-top:6px; font-size:13px; color:#cbd5e1;">
-                        Your Choice: <strong>${userAns.selected}</strong> | Target Value: <span style="color:var(--success); font-weight:bold;">${q.a}</span>
+                    <strong style="color:white; font-size: 16px;">Q${idx + 1}: ${q.q}</strong><br>
+                    <div style="margin-top:10px; font-size:14px; color:#cbd5e1; padding: 5px 0;">
+                        Your Choice: <span style="font-weight:bold; color:${itemClass === 'correct' ? 'var(--success)' : 'var(--danger)'}">${userAns.selected}</span> 
+                        <br>
+                        Correct Answer: <span style="color:var(--success); font-weight:bold; text-shadow: 0 0 5px rgba(0,255,136,0.3);">${q.a}</span>
                     </div>
-                    <div style="font-size:12px; margin-top:5px; color:#94a3b8;">💡 Translation/Core Analysis: ${q.e || 'Standard verification matrix check.'}</div>
+                    <div style="font-size:13px; margin-top:8px; color:#94a3b8; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;">
+                        💡 <strong>Explanation / Context:</strong> ${q.e || 'Standard verification matrix check.'}
+                    </div>
                 </div>
             `;
         });
@@ -543,39 +617,46 @@
         document.getElementById('history-list-view').style.display = 'block';
     }
 
-    function renderAnalyticsChart() {
-        const ctx = document.getElementById('analyticsChart').getContext('2d');
-        if(chartInstance) chartInstance.destroy();
-
+    function triggerMultiChartRenderPipeline() {
         let uniqueTimeline = [...new Set(analyticsData.map(d => d.date))];
-        if(uniqueTimeline.length === 0) uniqueTimeline = ["Grid Alfa", "Grid Beta"];
+        if(uniqueTimeline.length === 0) uniqueTimeline = ["Day 1", "Day 2", "Day 3"];
 
-        const filterPoints = (cat) => uniqueTimeline.map(t => {
-            const match = analyticsData.find(d => d.date === t && d.category === cat);
-            return match ? match.points : null;
+        const extractSubjectPoints = (cat) => uniqueTimeline.map(t => {
+            const pointsEntry = analyticsData.find(d => d.date === t && d.category === cat);
+            return pointsEntry ? pointsEntry.points : null;
         });
 
-        chartInstance = new Chart(ctx, {
+        const buildLineConfig = (label, points, color) => ({
+            type: 'line',
+            data: {
+                labels: uniqueTimeline,
+                datasets: [{ label: label, data: points, borderColor: color, backgroundColor: 'rgba(255,255,255,0.01)', tension: 0.18, spanGaps: true, pointRadius: 5, pointHoverRadius: 7 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' } }, y: { grid: { color: 'rgba(255,255,255,0.04)' } } } }
+        });
+
+        Object.keys(instantiatedCharts).forEach(key => { if(instantiatedCharts[key]) instantiatedCharts[key].destroy(); });
+
+        const mixCanvasCtx = document.getElementById('mainMixChart').getContext('2d');
+        instantiatedCharts['mix'] = new Chart(mixCanvasCtx, {
             type: 'line',
             data: {
                 labels: uniqueTimeline,
                 datasets: [
-                    { label: 'One Word (OWS)', data: filterPoints('OWS'), borderColor: '#3b82f6', tension: 0.2, spanGaps: true },
-                    { label: 'Synonyms', data: filterPoints('Synonym'), borderColor: '#10b981', tension: 0.2, spanGaps: true },
-                    { label: 'Antonyms', data: filterPoints('Antonym'), borderColor: '#ef4444', tension: 0.2, spanGaps: true },
-                    { label: 'Idioms', data: filterPoints('Idiom'), borderColor: '#f59e0b', tension: 0.2, spanGaps: true },
-                    { label: 'MIX Full Mock', data: filterPoints('MIX'), borderColor: '#8b5cf6', tension: 0.2, spanGaps: true }
+                    { label: 'OWS', data: extractSubjectPoints('OWS'), borderColor: '#3b82f6', tension: 0.15, spanGaps: true },
+                    { label: 'Synonyms', data: extractSubjectPoints('Synonym'), borderColor: '#10b981', tension: 0.15, spanGaps: true },
+                    { label: 'Antonyms', data: extractSubjectPoints('Antonym'), borderColor: '#ef4444', tension: 0.15, spanGaps: true },
+                    { label: 'Idioms', data: extractSubjectPoints('Idiom'), borderColor: '#f59e0b', tension: 0.15, spanGaps: true },
+                    { label: 'MIX Mock', data: extractSubjectPoints('MIX'), borderColor: '#8b5cf6', tension: 0.15, spanGaps: true }
                 ]
             },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, clicks: { color: 'white' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' } }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false }
         });
+
+        instantiatedCharts['ows'] = new Chart(document.getElementById('owsChart').getContext('2d'), buildLineConfig('One Word Substitution Marks', extractSubjectPoints('OWS'), '#3b82f6'));
+        instantiatedCharts['syn'] = new Chart(document.getElementById('synChart').getContext('2d'), buildLineConfig('Synonyms Marks', extractSubjectPoints('Synonym'), '#10b981'));
+        instantiatedCharts['ant'] = new Chart(document.getElementById('antChart').getContext('2d'), buildLineConfig('Antonyms Marks', extractSubjectPoints('Antonym'), '#ef4444'));
+        instantiatedCharts['idiom'] = new Chart(document.getElementById('idiomChart').getContext('2d'), buildLineConfig('Idioms & Phrases Marks', extractSubjectPoints('Idiom'), '#f59e0b'));
     }
 
     updateCategoryBadges();
