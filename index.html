@@ -3,76 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SSC MTS Elite Exam Dashboard</title>
+    <title>Spider-Vocab: SSC MTS Elite Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #4f46e5; --primary-hover: #4338ca; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --dark: #0f172a; --light: #f8fafc; --border: #e2e8f0; }
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; display: flex; justify-content: center; color: var(--dark); }
-        .platform-container { background: white; width: 100%; max-width: 950px; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        :root { 
+            --spidey-red: #e63946; 
+            --spidey-red-hover: #b71c1c;
+            --spidey-blue: #1d3557; 
+            --electric-blue: #00b4d8;
+            --dark-suit: #111827; 
+            --web-gray: #f8fafc; 
+            --border-line: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
         
-        /* Header */
-        .header-main { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .header-main h1 { color: var(--dark); margin: 0; font-size: 30px; font-weight: 800; }
-        .header-main p { color: #64748b; margin: 8px 0 0 0; font-size: 15px; }
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            background-color: var(--dark-suit); 
+            background-image: radial-gradient(rgba(230, 57, 70, 0.1) 1px, transparent 0);
+            background-size: 24px 24px;
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            color: #f1f5f9; 
+        }
         
-        /* Navigation Tabs */
-        .nav-tabs { display: flex; gap: 8px; background: #e2e8f0; padding: 4px; border-radius: 8px; margin-bottom: 30px; }
-        .tab-btn { flex: 1; background: none; border: none; font-size: 15px; font-weight: 600; cursor: pointer; padding: 10px; border-radius: 6px; color: #475569; transition: all 0.2s; }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+        .platform-container { 
+            background: #1e293b; 
+            width: 100%; 
+            max-width: 950px; 
+            padding: 35px; 
+            border-radius: 16px; 
+            border: 2px solid var(--spidey-red);
+            box-shadow: 0 0 20px rgba(230, 57, 70, 0.3); 
+        }
+        
+        /* Header Styling (Spider-Man Vibe) */
+        .header-main { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px dashed var(--spidey-red); 
+            padding-bottom: 20px; 
+        }
+        .header-main h1 { 
+            color: var(--spidey-red); 
+            margin: 0; 
+            font-size: 32px; 
+            font-weight: 900; 
+            text-shadow: 2px 2px 0px #000, 0 0 10px rgba(0, 180, 216, 0.6);
+            letter-spacing: -0.025em; 
+        }
+        .header-main p { 
+            color: var(--electric-blue); 
+            margin: 8px 0 0 0; 
+            font-size: 15px; 
+            font-weight: 600;
+        }
+        
+        /* Premium Tabs */
+        .nav-tabs { display: flex; gap: 8px; background: #0f172a; padding: 6px; border-radius: 8px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .tab-btn { flex: 1; background: none; border: none; font-size: 14px; font-weight: 700; cursor: pointer; padding: 12px; border-radius: 6px; color: #94a3b8; transition: all 0.2s; }
+        .tab-btn.active { background: var(--spidey-red); color: white; box-shadow: 0 0 12px rgba(230, 57, 70, 0.6); }
         
         .panel { display: none; }
         .panel.active { display: block; }
         
-        /* Main Category Grid */
+        /* Category Grid */
         .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-        .mode-action-btn { background: white; border: 1px solid var(--border); padding: 20px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; transition: all 0.2s; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-        .mode-action-btn:hover { border-color: var(--primary); background: #f5f3ff; transform: translateY(-2px); }
-        .mode-action-btn .badge { background: #e0e7ff; color: var(--primary); font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
-        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; border: none; align-items: center; justify-content: center; }
-        .mix-action-btn:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); color: white; }
+        .mode-action-btn { background: #334155; border: 1px solid rgba(255,255,255,0.1); padding: 20px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: white; transition: all 0.2s; }
+        .mode-action-btn:hover { border-color: var(--electric-blue); background: var(--spidey-blue); transform: translateY(-2px); box-shadow: 0 0 15px rgba(0, 180, 216, 0.4); }
+        .mode-action-btn .badge { background: var(--spidey-red); color: white; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+        .mix-action-btn { grid-column: 1 / -1; background: linear-gradient(135deg, var(--spidey-red), #991b1b); border: none; align-items: center; justify-content: center; }
+        .mix-action-btn:hover { background: linear-gradient(135deg, #b71c1c, var(--spidey-red)); box-shadow: 0 0 15px rgba(230, 57, 70, 0.6); }
 
-        /* Sets View Dashboard */
-        .set-section { background: var(--light); border: 1px solid var(--border); padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+        /* Sets Screen */
+        .set-section { background: #334155; border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 12px; margin-bottom: 25px; }
         .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
-        .set-btn { background: white; border: 1px solid var(--border); padding: 14px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 4px; transition: all 0.15s; }
-        .set-btn:hover { border-color: var(--primary); background: #f5f3ff; }
-        .set-btn span.count { font-size: 12px; color: #64748b; font-weight: 500; }
+        .set-btn { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 14px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; color: white; text-align: left; display: flex; flex-direction: column; gap: 4px; transition: all 0.15s; }
+        .set-btn:hover { border-color: var(--spidey-red); background: #1e1b4b; }
+        .set-btn span.count { font-size: 12px; color: #94a3b8; font-weight: 500; }
         
-        /* Quiz Layout */
-        .quiz-box { border: 1px solid var(--border); padding: 30px; border-radius: 14px; background: white; }
-        .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .timer-panel { background: #fee2e2; color: #991b1b; padding: 8px 14px; border-radius: 6px; font-weight: 700; }
-        .question-text { font-size: 20px; font-weight: 700; margin-bottom: 25px; }
+        /* Quiz Box Styling */
+        .quiz-box { border: 2px solid var(--spidey-blue); padding: 30px; border-radius: 14px; background: #0f172a; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+        .quiz-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; color: #94a3b8; font-weight: 600; }
+        .timer-panel { background: #fee2e2; color: #991b1b; padding: 8px 14px; border-radius: 6px; font-weight: 800; border: 1px solid var(--spidey-red); }
+        .question-text { font-size: 20px; font-weight: 700; margin-bottom: 25px; color: white; line-height: 1.5; }
         .options-stack { display: flex; flex-direction: column; gap: 12px; }
-        .opt-row { background: var(--light); border: 1px solid var(--border); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; }
-        .opt-row.selected { background: #eef2ff; border-color: var(--primary); color: var(--primary); font-weight: 700; }
         
-        /* Controls */
-        .nav-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .control-btn { padding: 12px 20px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; flex: 1; min-width: 120px; }
-        .btn-submit-next { background: var(--primary); color: white; }
-        .btn-skip { background: #cbd5e1; color: #475569; }
+        /* Spidey Options Rows */
+        .opt-row { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); padding: 14px 20px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 15px; color: #e2e8f0; font-weight: 500; transition: all 0.15s; }
+        .opt-row:hover { background: #334155; border-color: var(--electric-blue); }
+        .opt-row.selected { background: var(--spidey-blue); border-color: var(--electric-blue); color: var(--electric-blue); font-weight: 700; box-shadow: 0 0 10px rgba(0,180,216,0.3); }
+        
+        /* Nav Controls Panel */
+        .nav-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .control-btn { padding: 12px 20px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; flex: 1; min-width: 110px; transition: all 0.2s; }
+        .btn-submit-next { background: var(--spidey-red); color: white; }
+        .btn-submit-next:hover { background: var(--spidey-red-hover); }
+        .btn-submit-next:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
+        .btn-back { background: #334155; color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-back:hover { background: #475569; }
+        .btn-skip { background: #475569; color: white; }
         .btn-review { background: var(--warning); color: white; }
-        .btn-quit { background: #fff; border: 1px solid var(--danger); color: var(--danger); }
+        .btn-quit { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        .btn-quit:hover { background: rgba(239, 68, 68, 0.1); }
 
-        /* Reports Tracker */
-        .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        .history-table th, .history-table td { border: 1px solid var(--border); padding: 12px; text-align: left; }
-        .history-table th { background: var(--light); font-weight: 700; }
-        .view-report-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        /* Past Reports History Layout */
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; color: white; }
+        .history-table th, .history-table td { border: 1px solid rgba(255,255,255,0.1); padding: 12px; text-align: left; }
+        .history-table th { background: #0f172a; font-weight: 700; color: var(--electric-blue); }
+        .history-table tr:nth-child(even) { background: #1e293b; }
+        .view-report-btn { background: var(--electric-blue); color: var(--dark-suit); border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         
-        .review-item { background: var(--light); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0; border: 1px solid var(--border); border-left-width: 5px; }
+        .review-item { background: #1e293b; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); border-left: 5px solid #cbd5e1; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
-        .review-item.skipped { border-left-color: #cbd5e1; }
+        .review-item.skipped { border-left-color: #64748b; }
         
-        /* Admin Section Box */
-        .workspace-card { border: 1px solid var(--border); border-radius: 12px; background: white; padding: 25px; margin-bottom: 25px; }
-        .admin-input { width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 5px; }
-        .graph-box { height: 320px; margin-bottom: 40px; }
-        .timer-badge { background: #f1f5f9; color: #475569; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .score-card-big { background: var(--light); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--border); max-width: 400px; margin: 0 auto 30px auto; }
-        .score-num { font-size: 54px; font-weight: 800; color: var(--primary); margin: 10px 0; }
+        /* Control Admin Workspace */
+        .workspace-card { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: #0f172a; padding: 25px; margin-bottom: 25px; }
+        .admin-input { width: 100%; box-sizing: border-box; padding: 12px 14px; background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 14px; margin-top: 5px; color: white; }
+        .admin-input:focus { border-color: var(--electric-blue); outline: none; }
+        .graph-box { height: 320px; margin-bottom: 40px; background: #0f172a; padding: 15px; border-radius: 12px; }
+        .score-card-big { background: #0f172a; padding: 30px; border-radius: 12px; text-align: center; border: 2px solid var(--spidey-red); max-width: 400px; margin: 0 auto 30px auto; box-shadow: 0 0 15px rgba(230,57,70,0.4); }
+        .score-num { font-size: 54px; font-weight: 800; color: var(--electric-blue); margin: 10px 0; }
         .stat-badge-row { display: flex; justify-content: center; gap: 15px; font-weight: 700; font-size: 14px; margin-top: 10px; }
     </style>
 </head>
@@ -80,57 +137,57 @@
 
 <div class="platform-container">
     <div class="header-main">
-        <h1>SSC MTS Elite Exam Dashboard</h1>
-        <p>Real Exam Pattern & Subject-Wise Target Pack System (+3 / -1 Marking)</p>
+        <h1>SPIDER-VOCAB MOCK BOARD</h1>
+        <p>With Great Power Comes Great Preparation • Real Marking System (+3 / -1)</p>
     </div>
 
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchPanel('test')">🎯 Practice Mock Board</button>
-        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Subject-Wise Analytics Graph</button>
-        <button class="tab-btn" onclick="switchPanel('history')">📜 Past Reports (Mistake Tracker)</button>
-        <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Control Panel Workspace</button>
+        <button class="tab-btn" onclick="switchPanel('analytics')">📈 Analytics Graph</button>
+        <button class="tab-btn" onclick="switchPanel('history')">📜 Past Reports (Galti Tracker)</button>
+        <button class="tab-btn" onclick="switchPanel('admin')">⚙️ Web-Slinger Control Panel</button>
     </div>
 
     <!-- PANEL 1: TESTING SUITE -->
     <div id="panel-test" class="panel active">
         <!-- Step 1: Category Screen -->
         <div id="category-menu-view">
-            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">Select Category Mode:</h3>
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--electric-blue);">Select Category Mode:</h3>
             <div class="btn-grid">
                 <button class="mode-action-btn" onclick="openSubjectSets('OWS')">
                     <span>One Word Substitution</span>
-                    <span class="badge" id="badge-count-OWS">1 Set Available</span>
+                    <span class="badge" id="badge-count-OWS">0 Sets Available</span>
                 </button>
                 <button class="mode-action-btn" onclick="openSubjectSets('Synonym')">
                     <span>Synonyms (Paryayvachi)</span>
-                    <span class="badge" id="badge-count-Synonym">1 Set Available</span>
+                    <span class="badge" id="badge-count-Synonym">0 Sets Available</span>
                 </button>
                 <button class="mode-action-btn" onclick="openSubjectSets('Antonym')">
                     <span>Antonyms (Vilom Shabd)</span>
-                    <span class="badge" id="badge-count-Antonym">1 Set Available</span>
+                    <span class="badge" id="badge-count-Antonym">0 Sets Available</span>
                 </button>
                 <button class="mode-action-btn" onclick="openSubjectSets('Idiom')">
                     <span>Idioms & Phrases</span>
-                    <span class="badge" id="badge-count-Idiom">1 Set Available</span>
+                    <span class="badge" id="badge-count-Idiom">0 Sets Available</span>
                 </button>
                 <button class="mode-action-btn mix-action-btn" onclick="openSubjectSets('MIX')">🚀 Launch Comprehensive MIX Mock Test Dashboard</button>
             </div>
         </div>
 
-        <!-- Step 2: Sets Selection Screen (Inside Subject) -->
+        <!-- Step 2: Sets Selection Screen -->
         <div id="sets-menu-view" style="display:none;">
-            <button class="control-btn btn-skip" style="flex:none; max-width:130px; padding:8px;" onclick="backToCategories()">← Change Category</button>
+            <button class="control-btn btn-back" style="flex:none; max-width:150px;" onclick="backToCategories()">← Change Category</button>
             <div class="set-section" style="margin-top:15px;">
-                <h3 style="margin:0; font-size:18px;" id="set-view-title">Available Practice Sets:</h3>
+                <h3 style="margin:0; font-size:18px; color: var(--electric-blue);" id="set-view-title">Available Practice Sets:</h3>
                 
-                <!-- Timer Configuration Row (Shown right before starting set) -->
-                <div style="display: flex; gap: 20px; background: white; border: 1px solid var(--border); padding: 12px 15px; border-radius: 8px; margin-top: 15px; align-items: center; font-size: 14px;">
-                    <label style="font-weight: 600; cursor: pointer;">
+                <!-- Timer Row -->
+                <div style="display: flex; gap: 20px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; align-items: center; font-size: 14px;">
+                    <label style="font-weight: 600; cursor: pointer; color: white;">
                         <input type="checkbox" id="timer-toggle" checked> Enable Full Mock Timer
                     </label>
                     <div>
-                        <label style="font-weight: 600; color:#475569;">Duration (Minutes): </label>
-                        <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:55px; padding:4px; display:inline-block; margin:0;">
+                        <label style="font-weight: 600; color:#94a3b8;">Duration (Minutes): </label>
+                        <input type="number" id="mock-minutes" value="5" min="1" max="30" class="admin-input" style="width:55px; padding:6px; display:inline-block; margin:0; background:#334155;">
                     </div>
                 </div>
 
@@ -142,15 +199,15 @@
         <div id="quiz-view" style="display:none;"></div>
     </div>
 
-    <!-- PANEL 2: PERFORMANCE INTELLIGENCE -->
+    <!-- PANEL 2: ANALYTICS -->
     <div id="panel-analytics" class="panel">
-        <h2 style="font-size:18px; font-weight:700; margin-bottom:10px;">Subject-Wise Performance Breakdown</h2>
+        <h2 style="font-size:18px; font-weight:700; margin-bottom:10px; color: var(--electric-blue);">Subject-Wise Performance Breakdown</h2>
         <div class="graph-box"><canvas id="analyticsChart"></canvas></div>
     </div>
 
     <!-- PANEL 3: HISTORY LOGS & MISTAKE REPORT -->
     <div id="panel-history" class="panel">
-        <h2>📜 Past Mock Test Reports (Mistake Tracker)</h2>
+        <h2 style="color: var(--electric-blue);">📜 Past Mock Test Reports (Galti Tracker)</h2>
         <div id="history-list-view">
             <table class="history-table">
                 <thead>
@@ -165,24 +222,23 @@
             </table>
         </div>
         <div id="history-detail-view" style="display:none; margin-top:20px;">
-            <button class="control-btn btn-skip" style="flex:none; width:150px; margin-bottom:20px;" onclick="closeReportDetail()">← Back to Reports</button>
+            <button class="control-btn btn-back" style="flex:none; width:150px; margin-bottom:20px;" onclick="closeReportDetail()">← Back to Reports</button>
             <div id="report-detail-container"></div>
         </div>
     </div>
 
-    <!-- PANEL 4: PROFESSIONAL CONTROL WORKSPACE -->
+    <!-- PANEL 4: CONTROL WORKSPACE -->
     <div id="panel-admin" class="panel">
-        <div class="workspace-card" style="background: #faf5ff; border-color: #e9d5ff;">
-            <h3 style="color: #6b21a8;">📥 Batch Import Automation Data</h3>
-            <p>Paste the dedicated structured code block generated by the AI. It detects type automatically and packs it inside a clean Set.</p>
-            <textarea id="import-code-area" rows="5" class="admin-input" style="font-family: monospace; font-size:13px;" placeholder="Paste the code block here..."></textarea>
-            <button class="control-btn btn-submit-next" style="background:#8b5cf6; width:100%; margin-top:15px;" onclick="importBatchData()">Execute Batch Deployment</button>
+        <div class="workspace-card" style="border-color: var(--spidey-red);">
+            <h3 style="color: var(--spidey-red); margin:0;">📥 Web-Slinger Batch Import Automation</h3>
+            <p style="color:#94a3b8; font-size:13px; margin:5px 0 20px 0;">Paste the dedicated structured code block generated by the AI here.</p>
+            <textarea id="import-code-area" rows="5" class="admin-input" placeholder="Paste the code block here..."></textarea>
+            <button class="control-btn btn-submit-next" style="width:100%; margin-top:15px; font-size:15px;" onclick="importBatchData()">Execute Batch Deployment</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Separated Structures based on User requirements
     const initialDatabase = {
         OWS: [{ setName: "Set 1 (Starter Pack)", items: [{q: "Words inscribed on a tomb", a: "Epitaph", o: ["Epitaph", "Obituary", "Sermon", "Manuscript"], e: "Epitaph = Samadhi lekh."}] }],
         Synonym: [{ setName: "Set 1 (Starter Pack)", items: [{q: "What is the synonym of 'Idle'?", a: "Lazy", o: ["Lazy", "Active", "Busy", "Alert"], e: "Idle matlab aalsi."}] }],
@@ -224,11 +280,11 @@
         const listContainer = document.getElementById('set-buttons-list');
         
         if(cat === 'MIX') {
-            titleElement.innerText = "Full Syllabus MIX Mock Options:";
+            titleElement.innerText = "Full Combined Mock Track Option:";
             listContainer.innerHTML = `
                 <button class="set-btn" onclick="startQuiz('ALL_SETS')">
                     <strong>Launch Full Combined Mock</strong>
-                    <span class="count">Mixes items from all available sets</span>
+                    <span class="count">Mixes items from all operational packs</span>
                 </button>
             `;
         } else {
@@ -237,7 +293,7 @@
             listContainer.innerHTML = setsArray.map((s, idx) => `
                 <button class="set-btn" onclick="startQuiz(${idx})">
                     <strong>Set ${idx + 1}</strong>
-                    <span class="count">Contains ${s.items.length} Sawaal</span>
+                    <span class="count">Contains ${s.items.length} Questions</span>
                 </button>
             `).join('');
         }
@@ -269,12 +325,12 @@
                     items: parsed.questions
                 });
                 saveState();
-                alert(`Zabardast! Aapka data detect ho gaya aur wo "${parsed.type}" ke "Set ${setIndexNum}" me save ho gaya hai!`);
+                alert(`Data imported successfully into ${parsed.type} (Set ${setIndexNum})!`);
                 document.getElementById('import-code-area').value = "";
                 switchPanel('test');
                 backToCategories();
-            } else { alert("Type system parameters match failed!"); }
-        } catch(e) { alert("Parsing error! Code block check karein."); }
+            } else { alert("Data type synchronization failed!"); }
+        } catch(e) { alert("Parsing error!"); }
     }
 
     function startQuiz(setSelector) {
@@ -284,10 +340,11 @@
             testSuiteQuestions = globalDB[currentSelectedCategory][setSelector].items || [];
         }
 
-        if(testSuiteQuestions.length === 0) return alert("Is Set me koi questions nahi mile!");
+        if(testSuiteQuestions.length === 0) return alert("No questions available.");
 
         testSuiteQuestions.sort(() => 0.5 - Math.random());
-        activeQIdx = 0; userSelectionsSnapshot = [];
+        activeQIdx = 0; 
+        userSelectionsSnapshot = [];
 
         document.getElementById('sets-menu-view').style.display = 'none';
         document.getElementById('quiz-view').style.display = 'block';
@@ -315,26 +372,31 @@
     }
 
     function renderQuizQuestion(timerFlag) {
-        selectedAnswerVal = null;
+        selectedAnswerVal = userSelectionsSnapshot[activeQIdx]?.selected;
+        if(selectedAnswerVal === 'Skipped' || selectedAnswerVal === 'Marked Review') selectedAnswerVal = null;
+        
         const currentData = testSuiteQuestions[activeQIdx];
         const container = document.getElementById('quiz-view');
 
         container.innerHTML = `
             <div class="quiz-box">
                 <div class="quiz-top-bar">
-                    <span style="font-weight:700;">Mode: ${currentSelectedCategory} Suite</span>
-                    ${timerFlag ? `<div class="timer-panel">⏱️ Total Time Left: <span id="timer-clock-display"></span></div>` : '<span>Continuous</span>'}
-                    <span style="font-weight:600;">Question ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
+                    <span style="color:var(--electric-blue)">Mode: ${currentSelectedCategory} Pack</span>
+                    ${timerFlag ? `<div class="timer-panel">⏱️ Total Time Left: <span id="timer-clock-display">--:--</span></div>` : '<span>Continuous</span>'}
+                    <span>Question ${activeQIdx + 1} of ${testSuiteQuestions.length}</span>
                 </div>
                 <div class="question-text">${currentData.q}</div>
                 <div class="options-stack">
-                    ${currentData.o.map(opt => `<div class="opt-row" onclick="pickQuizOption(this, '${opt}')">${opt}</div>`).join('')}
+                    ${currentData.o.map(opt => `
+                        <div class="opt-row ${selectedAnswerVal === opt ? 'selected' : ''}" onclick="pickQuizOption(this, '${opt}')">${opt}</div>
+                    `).join('')}
                 </div>
                 <div class="nav-controls">
-                    <button class="control-btn btn-quit" onclick="forceQuitSession()">Quit Test</button>
+                    <button class="control-btn btn-quit" onclick="forceQuitSession()">Quit Room</button>
+                    <button class="control-btn btn-back" id="back-q-btn" ${activeQIdx === 0 ? 'disabled' : ''} onclick="goBackQuestion()">← Back</button>
                     <button class="control-btn btn-skip" onclick="handleQuestionAction('SKIP')">Skip</button>
-                    <button class="control-btn btn-review" onclick="handleQuestionAction('REVIEW')">Review Tag</button>
-                    <button class="control-btn btn-submit-next" id="next-act-btn" disabled onclick="handleQuestionAction('SUBMIT')">Submit & Next</button>
+                    <button class="control-btn btn-review" onclick="handleQuestionAction('REVIEW')">Review</button>
+                    <button class="control-btn btn-submit-next" id="next-act-btn" ${selectedAnswerVal ? '' : 'disabled'} onclick="handleQuestionAction('SUBMIT')">Submit & Next</button>
                 </div>
             </div>
         `;
@@ -347,15 +409,27 @@
         document.getElementById('next-act-btn').disabled = false;
     }
 
+    function goBackQuestion() {
+        if(activeQIdx > 0) {
+            activeQIdx--;
+            renderQuizQuestion(document.getElementById('timer-toggle').checked);
+        }
+    }
+
     function handleQuestionAction(type) {
         const correct = testSuiteQuestions[activeQIdx].a;
+        let answerObj = {};
+
         if(type === 'SUBMIT') {
-            userSelectionsSnapshot.push({ status: selectedAnswerVal === correct ? 'CORRECT' : 'WRONG', selected: selectedAnswerVal });
+            answerObj = { status: selectedAnswerVal === correct ? 'CORRECT' : 'WRONG', selected: selectedAnswerVal };
         } else if(type === 'SKIP') {
-            userSelectionsSnapshot.push({ status: 'SKIPPED', selected: 'Skipped' });
+            answerObj = { status: 'SKIPPED', selected: 'Skipped' };
         } else if(type === 'REVIEW') {
-            userSelectionsSnapshot.push({ status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED', selected: selectedAnswerVal || 'Marked Review', isReview: true });
+            answerObj = { status: selectedAnswerVal ? (selectedAnswerVal === correct ? 'CORRECT' : 'WRONG') : 'SKIPPED', selected: selectedAnswerVal || 'Marked Review', isReview: true };
         }
+
+        // Save or update selection at current index
+        userSelectionsSnapshot[activeQIdx] = answerObj;
 
         activeQIdx++;
         if(activeQIdx < testSuiteQuestions.length) {
@@ -367,7 +441,7 @@
     }
 
     function forceQuitSession() {
-        if(confirm("Exit current quiz board? Data entry loss warning.")) {
+        if(confirm("Exit current room? Data loss alert.")) {
             clearInterval(globalTimer);
             document.getElementById('quiz-view').style.display = 'none';
             backToCategories();
@@ -376,6 +450,11 @@
 
     function terminateMockSession() {
         let correct = 0, wrong = 0, skipped = 0;
+        // Backfill empty slots if ended prematurely
+        for(let i=0; i<testSuiteQuestions.length; i++){
+            if(!userSelectionsSnapshot[i]) userSelectionsSnapshot[i] = { status: 'SKIPPED', selected: 'Skipped' };
+        }
+
         userSelectionsSnapshot.forEach(s => {
             if(s.status === 'CORRECT') correct++;
             else if(s.status === 'WRONG') wrong++;
@@ -399,12 +478,12 @@
 
         document.getElementById('quiz-view').innerHTML = `
             <div class="quiz-box" style="text-align:center;">
-                <h2>Exam Statistics Report</h2>
+                <h2 style="color:var(--spidey-red)">Mission Reports Dispatched</h2>
                 <div class="score-card-big"><div class="score-num">${totalAwardedPoints}</div>Marks</div>
                 <div class="stat-badge-row">
                     <span style="color:var(--success)">✅ Correct: ${correct}</span> | 
                     <span style="color:var(--danger)">❌ Wrong: ${wrong}</span> | 
-                    <span>⏳ Skipped: ${skipped}</span>
+                    <span style="color:#94a3b8">⏳ Skipped: ${skipped}</span>
                 </div>
                 <button class="control-btn btn-submit-next" style="margin-top:20px; max-width:250px;" onclick="closeQuizBoardView()">Close Dashboard</button>
             </div>
@@ -420,15 +499,15 @@
         const logs = JSON.parse(localStorage.getItem('mts_pro_history_logs_ext')) || [];
         const tbody = document.getElementById('history-table-body');
         if(logs.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No history markers found yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">No mission data recorded yet.</td></tr>`;
             return;
         }
         tbody.innerHTML = logs.reverse().map(l => `
             <tr>
                 <td>${l.date}</td>
-                <td><span class="timer-badge" style="background:#eef2ff; color:var(--primary);">${l.category} Set Mode</span></td>
+                <td><span class="badge" style="background:var(--spidey-blue); color:var(--electric-blue); padding:4px 8px; border-radius:4px;">${l.category}</span></td>
                 <td style="font-weight:bold; color:${l.points >= 0 ? 'var(--success)' : 'var(--danger)'}">${l.points} Marks</td>
-                <td><button class="view-report-btn" onclick="openReportDetail(${l.id})">View Report</button></td>
+                <td><button class="view-report-btn" onclick="openReportDetail(${l.id})">Review Sheet</button></td>
             </tr>
         `).join('');
     }
@@ -442,17 +521,17 @@
         const detailContainer = document.getElementById('report-detail-container');
         document.getElementById('history-detail-view').style.display = 'block';
 
-        let html = `<h3>Galti Tracker Matrix Sheet - Category (${match.category})</h3>`;
+        let html = `<h3 style="color:var(--electric-blue)">Analysis Block Sheet Matrix: Category (${match.category})</h3>`;
         match.questionsDump.forEach((q, idx) => {
             const userAns = match.answersDump[idx];
             let itemClass = userAns.status === 'CORRECT' ? 'correct' : (userAns.status === 'WRONG' ? 'wrong' : 'skipped');
             html += `
                 <div class="review-item ${itemClass}">
-                    <strong>Q${idx + 1}: ${q.q}</strong><br>
-                    <div style="margin-top:6px; font-size:13px;">
-                        Aapka Selection: <strong>${userAns.selected}</strong> | Sahi Answer: <span style="color:var(--success); font-weight:bold;">${q.a}</span>
+                    <strong style="color:white;">Q${idx + 1}: ${q.q}</strong><br>
+                    <div style="margin-top:6px; font-size:13px; color:#cbd5e1;">
+                        Your Choice: <strong>${userAns.selected}</strong> | Target Value: <span style="color:var(--success); font-weight:bold;">${q.a}</span>
                     </div>
-                    <div style="font-size:12px; margin-top:5px; color:#64748b;">💡 Explanation: ${q.e || 'Vocabulary memory metrics parameters.'}</div>
+                    <div style="font-size:12px; margin-top:5px; color:#94a3b8;">💡 Translation/Core Analysis: ${q.e || 'Standard verification matrix check.'}</div>
                 </div>
             `;
         });
@@ -469,7 +548,7 @@
         if(chartInstance) chartInstance.destroy();
 
         let uniqueTimeline = [...new Set(analyticsData.map(d => d.date))];
-        if(uniqueTimeline.length === 0) uniqueTimeline = ["Pack A", "Pack B"];
+        if(uniqueTimeline.length === 0) uniqueTimeline = ["Grid Alfa", "Grid Beta"];
 
         const filterPoints = (cat) => uniqueTimeline.map(t => {
             const match = analyticsData.find(d => d.date === t && d.category === cat);
@@ -488,11 +567,17 @@
                     { label: 'MIX Full Mock', data: filterPoints('MIX'), borderColor: '#8b5cf6', tension: 0.2, spanGaps: true }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, clicks: { color: 'white' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' } }
+                }
+            }
         });
     }
 
-    // Initialize
     updateCategoryBadges();
 </script>
 </body>
